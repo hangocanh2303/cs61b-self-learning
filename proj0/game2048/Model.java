@@ -138,6 +138,13 @@ public class Model extends Observable {
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
+        for (int row = 0; row < b.size(); row++) {
+            for (int col = 0; col < b.size(); col++) {
+                if (b.tile(col, row) == null) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -148,6 +155,14 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+        for (int row = 0; row < b.size(); row++){
+            for (int col = 0; col < b.size(); col++) {
+                Tile t = b.tile(col, row);
+                if (t != null && t.value() == MAX_PIECE) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -159,6 +174,33 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        return emptySpaceExists(b) || adjacentEqualTilesExist(b);
+    }
+
+    /**
+     * Returns true if there are any adjacent equal tiles exist in the board
+     */
+    private static boolean adjacentEqualTilesExist(Board b) {
+        for (int row = 0; row < b.size(); row++) {
+            for (int col = 0; col < b.size(); col++) {
+                Tile currentTile = b.tile(col, row);
+                if (currentTile == null) {
+                    continue;
+                }
+                if (col + 1 < b.size()) {
+                    Tile right = b.tile(col + 1, row);
+                    if (right != null && currentTile.value() == right.value()) {
+                        return true;
+                    }
+                }
+                if (row + 1 < b.size()) {
+                    Tile down = b.tile(col, row + 1);
+                    if (down != null && currentTile.value() == down.value()) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 
