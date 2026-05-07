@@ -113,12 +113,47 @@ public class Model extends Observable {
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
-
+        board.setViewingPerspective(side);
+        int maxBoardIndex = board.size() - 1;
+        for (int c = 0; c <= maxBoardIndex; c++) {
+            int lastMergeRow = -1;
+            for (int r = maxBoardIndex; r >= 0; r--) {
+                Tile t = board.tile(c, r);
+                if (t != null) {
+                   int desRow = destRowTileMoveTo(r, c, lastMergeRow);
+                   if (desRow > r) {
+                       boolean shouldUpdateScore = board.move(c, desRow, t);
+                       if (shouldUpdateScore) {
+                           score += 2 * t.value();
+                           lastMergeRow = desRow;
+                       }
+                       changed = true;
+                   }
+                }
+            }
+        }
+        board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
             setChanged();
         }
         return changed;
+    }
+
+    /** Return destination location a Tile move to after tilt */
+    private int destRowTileMoveTo(int r, int c, int lastMergeRow) {
+        int desRow = r;
+        while (desRow + 1 < board.size()) {
+            Tile aboveTile = board.tile(c, desRow + 1);
+            if (aboveTile != null) {
+                if ((desRow + 1) != lastMergeRow && aboveTile.value() == board.tile(c, r).value()) {
+                    desRow++;
+                }
+                break;
+            }
+            desRow = desRow + 1;
+        }
+        return desRow;
     }
 
     /** Checks if the game is over and sets the gameOver variable
