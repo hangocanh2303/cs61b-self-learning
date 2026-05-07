@@ -116,27 +116,33 @@ public class Model extends Observable {
         board.setViewingPerspective(side);
         int maxBoardIndex = board.size() - 1;
         for (int c = 0; c <= maxBoardIndex; c++) {
-            int lastMergeRow = -1;
-            for (int r = maxBoardIndex; r >= 0; r--) {
-                Tile t = board.tile(c, r);
-                if (t != null) {
-                   int desRow = destRowTileMoveTo(r, c, lastMergeRow);
-                   if (desRow > r) {
-                       boolean shouldUpdateScore = board.move(c, desRow, t);
-                       if (shouldUpdateScore) {
-                           score += 2 * t.value();
-                           lastMergeRow = desRow;
-                       }
-                       changed = true;
-                   }
-                }
-            }
-        }
+            changed |= processColumn(c);
+       }
         board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
             setChanged();
         }
+        return changed;
+    }
+
+    private boolean processColumn(int c) {
+        boolean changed = false;
+            int lastMergeRow = -1;
+            for (int r = board.size() - 1; r >= 0; r--) {
+                Tile t = board.tile(c, r);
+                if (t != null) {
+                    int desRow = destRowTileMoveTo(r, c, lastMergeRow);
+                    if (desRow > r) {
+                        boolean shouldUpdateScore = board.move(c, desRow, t);
+                        if (shouldUpdateScore) {
+                            score += 2 * t.value();
+                            lastMergeRow = desRow;
+                        }
+                        changed = true;
+                    }
+                }
+            }
         return changed;
     }
 
