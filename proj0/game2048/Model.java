@@ -146,8 +146,7 @@ public class Model extends Observable {
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
         board.setViewingPerspective(side);
-        int maxBoardIndex = board.size() - 1;
-        for (int c = 0; c <= maxBoardIndex; c++) {
+        for (int c = 0; c <= board.size() - 1; c++) {
             changed |= processColumn(c);
         }
         board.setViewingPerspective(Side.NORTH);
@@ -191,7 +190,7 @@ public class Model extends Observable {
                 }
                 break;
             }
-            desRow = desRow + 1;
+            desRow++;
         }
         return desRow;
     }
