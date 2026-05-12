@@ -43,7 +43,7 @@ public class TimeAList {
     private static AList<Integer> createNsAList() {
         AList<Integer> Ns = new AList<>();
         int n = 1000;
-        while (n <= 10000000) {
+        while (n <= 128000) {
             Ns.addLast(n);
             n *= 2;
         }
