@@ -16,4 +16,6 @@ public interface Deque<T> {
     T removeLast();
 
     T get(int index);
+
+    T getRecursive(int index);
 }
