@@ -145,8 +145,11 @@ public class ArrayDequeTest {
     }
 
     @Test
-    public void getLLDequeTest() {
+    public void getArrayDequeTest() {
         ArrayDeque<Integer> ld = new ArrayDeque<>();
+        ld.addFirst(8);
+        ld.addFirst(7);
+        ld.addFirst(6);
         ld.addFirst(5);
         ld.addFirst(4);
         ld.addFirst(3);
@@ -168,11 +171,11 @@ public class ArrayDequeTest {
 
         assertNull(ld.get(-1));
 
-        assertNull(ld.get(6));
+        assertNull(ld.get(8));
     }
 
     @Test
-    public void getRecursiveLLDequeTest() {
+    public void getRecursiveArrayDequeTest() {
         ArrayDeque<Integer> ld = new ArrayDeque<>();
         ld.addFirst(5);
         ld.addFirst(4);
