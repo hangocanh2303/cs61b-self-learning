@@ -127,7 +127,7 @@ public class ArrayDequeTest {
 
     @Test
     /* Add large number of elements to deque; check if order is correct. */
-    public void bigLLDequeTest() {
+    public void bigArrayDequeTest() {
 
         ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
         for (int i = 0; i < 1000000; i++) {
@@ -199,6 +199,24 @@ public class ArrayDequeTest {
         assertNull(ld.getRecursive(-1));
 
         assertNull(ld.getRecursive(6));
+    }
+
+    @Test
+    /* Add large number of elements to deque; check if order is correct. */
+    public void largerThanItemsSizeArrayDequeTest() {
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        for (int i = 0; i < 100; i++) {
+            lld1.addFirst(i);
+        }
+
+        for (double i = 0; i < 50; i++) {
+            assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
+        }
+
+        for (double i = 99; i > 50; i--) {
+            assertEquals("Should have the same value", i, (double) lld1.removeFirst(), 0.0);
+        }
+
     }
 }
 
