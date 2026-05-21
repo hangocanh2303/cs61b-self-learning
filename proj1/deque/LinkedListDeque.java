@@ -104,7 +104,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         return p.item;
     }
 
-    @Override
     public T getRecursive(int index) {
         if (index + 1 > size || index < 0) {
             return null;

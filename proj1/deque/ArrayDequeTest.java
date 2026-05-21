@@ -173,6 +173,10 @@ public class ArrayDequeTest {
         assertNull(ld.get(-1));
 
         assertNull(ld.get(8));
+
+        ArrayDeque<Integer> ld1 = new ArrayDeque<>();
+        assertNull(ld1.get(1));
+
     }
 
 //    @Test

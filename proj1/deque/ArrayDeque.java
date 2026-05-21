@@ -97,7 +97,6 @@ public class ArrayDeque<T> implements Deque<T> {
         return items[resultIndex];
     }
 
-    @Override
     public T getRecursive(int index) {
         return null;
     }
