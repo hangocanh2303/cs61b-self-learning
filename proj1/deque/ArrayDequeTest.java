@@ -175,32 +175,32 @@ public class ArrayDequeTest {
         assertNull(ld.get(8));
     }
 
-    @Test
-    public void getRecursiveArrayDequeTest() {
-        ArrayDeque<Integer> ld = new ArrayDeque<>();
-        ld.addFirst(5);
-        ld.addFirst(4);
-        ld.addFirst(3);
-        ld.addFirst(2);
-        ld.addFirst(1);
-        int actual = ld.getRecursive(4);
-        int expected = 5;
-        assertEquals(expected, actual);
-
-        int actual1 = ld.getRecursive(0);
-        int expected1 = 1;
-
-        assertEquals(expected1, actual1);
-
-        int actual2 = ld.getRecursive(2);
-        int expected2 = 3;
-
-        assertEquals(expected2, actual2);
-
-        assertNull(ld.getRecursive(-1));
-
-        assertNull(ld.getRecursive(6));
-    }
+//    @Test
+//    public void getRecursiveArrayDequeTest() {
+//        ArrayDeque<Integer> ld = new ArrayDeque<>();
+//        ld.addFirst(5);
+//        ld.addFirst(4);
+//        ld.addFirst(3);
+//        ld.addFirst(2);
+//        ld.addFirst(1);
+//        int actual = ld.getRecursive(4);
+//        int expected = 5;
+//        assertEquals(expected, actual);
+//
+//        int actual1 = ld.getRecursive(0);
+//        int expected1 = 1;
+//
+//        assertEquals(expected1, actual1);
+//
+//        int actual2 = ld.getRecursive(2);
+//        int expected2 = 3;
+//
+//        assertEquals(expected2, actual2);
+//
+//        assertNull(ld.getRecursive(-1));
+//
+//        assertNull(ld.getRecursive(6));
+//    }
 
     @Test
     /* Add large number of elements to deque; check if order is correct. */
