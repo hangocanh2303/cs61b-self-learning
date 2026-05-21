@@ -1,5 +1,6 @@
 package deque;
 
+import edu.princeton.cs.algs4.StdRandom;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -217,6 +218,45 @@ public class ArrayDequeTest {
             assertEquals("Should have the same value", i, (double) lld1.removeFirst(), 0.0);
         }
 
+    }
+
+    @Test
+    public void randomizedTest() {
+        LinkedListDeque<Integer> L = new LinkedListDeque<>();
+        ArrayDeque<Integer> B = new ArrayDeque<>();
+
+        int N = 5000000;
+        for (int i = 0; i < N; i += 1) {
+            int operationNumber = StdRandom.uniform(0, 5);
+            if (operationNumber == 0) {
+                // addLast
+                int randVal = StdRandom.uniform(0, 100);
+                L.addLast(randVal);
+                B.addLast(randVal);
+//                System.out.println("addLast(" + randVal + ")");
+            } else if (operationNumber == 1) {
+                // size
+                int sizeL = L.size();
+                int sizeB = B.size();
+//                System.out.println("size: " + size);
+                assertEquals(sizeL, sizeB);
+            } else if (operationNumber == 2) {
+                int randVal = StdRandom.uniform(0, 100);
+                L.addFirst(randVal);
+                B.addFirst(randVal);
+//                System.out.println("getLast: " + last);
+            } else if (operationNumber == 3 && !L.isEmpty()) {
+                int lastL = L.removeLast();
+                int lastB = B.removeLast();
+//                System.out.println("removeLast: " + last);
+                assertEquals(lastL, lastB);
+            } else if (operationNumber == 4 && !L.isEmpty()) {
+                int lastL = L.removeFirst();
+                int lastB = B.removeFirst();
+//                System.out.println("removeLast: " + last);
+                assertEquals(lastL, lastB);
+            }
+        }
     }
 }
 
