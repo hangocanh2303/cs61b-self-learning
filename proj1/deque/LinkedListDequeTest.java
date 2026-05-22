@@ -171,30 +171,30 @@ public class LinkedListDequeTest {
         assertNull(ld.get(6));
     }
 
-    @Test
-    public void getRecursiveLLDequeTest() {
-        LinkedListDeque<Integer> ld = new LinkedListDeque<>();
-        ld.addFirst(5);
-        ld.addFirst(4);
-        ld.addFirst(3);
-        ld.addFirst(2);
-        ld.addFirst(1);
-        int actual = ld.getRecursive(4);
-        int expected = 5;
-        assertEquals(expected, actual);
-
-        int actual1 = ld.getRecursive(0);
-        int expected1 = 1;
-
-        assertEquals(expected1, actual1);
-
-        int actual2 = ld.getRecursive(2);
-        int expected2 = 3;
-
-        assertEquals(expected2, actual2);
-
-        assertNull(ld.getRecursive(-1));
-
-        assertNull(ld.getRecursive(6));
-    }
+//    @Test
+//    public void getRecursiveLLDequeTest() {
+//        LinkedListDeque<Integer> ld = new LinkedListDeque<>();
+//        ld.addFirst(5);
+//        ld.addFirst(4);
+//        ld.addFirst(3);
+//        ld.addFirst(2);
+//        ld.addFirst(1);
+//        int actual = ld.getRecursive(4);
+//        int expected = 5;
+//        assertEquals(expected, actual);
+//
+//        int actual1 = ld.getRecursive(0);
+//        int expected1 = 1;
+//
+//        assertEquals(expected1, actual1);
+//
+//        int actual2 = ld.getRecursive(2);
+//        int expected2 = 3;
+//
+//        assertEquals(expected2, actual2);
+//
+//        assertNull(ld.getRecursive(-1));
+//
+//        assertNull(ld.getRecursive(6));
+//    }
 }

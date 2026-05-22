@@ -44,11 +44,6 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    @Override
     public int size() {
         return size;
     }
@@ -100,10 +95,6 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         return items[resultIndex];
     }
 
-    public T getRecursive(int index) {
-        return null;
-    }
-
     private void resize(int capacity) {
         T[] a = (T[]) new Object[capacity];
         for (int i = 0; i < size; i++) {
@@ -122,7 +113,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     private class ArrayDequeIterator implements Iterator<T> {
         private int currPos;
 
-        public ArrayDequeIterator() {
+        ArrayDequeIterator() {
             currPos = 0;
         }
 
@@ -150,7 +141,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
                 return false;
             }
             for (int i = 0; i < size; i += 1) {
-                if (this.get(i).equals(otherDeque.get(i))) {
+                if (!this.get(i).equals(otherDeque.get(i))) {
                     return false;
                 }
             }

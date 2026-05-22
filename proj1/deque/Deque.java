@@ -5,7 +5,9 @@ public interface Deque<T> {
 
     void addLast(T item);
 
-    boolean isEmpty();
+    default boolean isEmpty() {
+        return size() == 0;
+    }
 
     int size();
 
@@ -16,6 +18,4 @@ public interface Deque<T> {
     T removeLast();
 
     T get(int index);
-
-//    T getRecursive(int index);
 }
