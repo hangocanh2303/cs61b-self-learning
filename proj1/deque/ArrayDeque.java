@@ -1,17 +1,20 @@
 package deque;
 
+import java.util.Iterator;
+
 /**
  * invariants:
  * nextFirst always the position immediately before the first element.
  * nextLast always the position immediately after the last element.
  *
  */
-public class ArrayDeque<T> implements Deque<T> {
+public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
 
     private T[] items;
     private int size;
     private int nextFirst;
     private int nextLast;
+    private static int RESIZE = 16;
 
     public ArrayDeque() {
         items = (T[]) new Object[8];
@@ -61,7 +64,7 @@ public class ArrayDeque<T> implements Deque<T> {
     @Override
     public T removeFirst() {
         if (size > 0) {
-            if ((size <= items.length / 4) && (items.length >= 16)) {
+            if ((size <= items.length / 4) && (items.length >= RESIZE)) {
                 resize(items.length / 2);
             }
             T firstItem = get(0);
@@ -76,7 +79,7 @@ public class ArrayDeque<T> implements Deque<T> {
     @Override
     public T removeLast() {
         if (size > 0) {
-            if ((size <= items.length / 4) && (items.length >= 16)) {
+            if ((size <= items.length / 4) && (items.length >= RESIZE)) {
                 resize(items.length / 2);
             }
             T lastItem = get(size - 1);
@@ -111,54 +114,47 @@ public class ArrayDeque<T> implements Deque<T> {
         nextLast = size;
     }
 
-//    private void resizeUpWithArrayCopy(int capacity) {
-//        T[] a = (T[]) new Object[capacity];
-//
-//        System.arraycopy(items, (nextFirst + 1) % items.length,
-//                a, capacity - (size - nextFirst),
-//                size - nextFirst);
-//        System.arraycopy(items, 0,
-//                a, 0,
-//                (nextLast + items.length) % items.length);
-//        items = a;
-//        nextFirst = (capacity - (size - nextFirst) - 1) % items.length;
-//    }
-//
-//    private void resizeUp(int capacity) {
-//        // step 1: create new array with items size is capacity
-//        T[] a = (T[]) new Object[capacity];
-//        // Step 2: getNewArrayNextFirst
-//        int newNextFirst = getNewArrayNextFirst(capacity);
-//        // Step 3: getNewArrayNextLast
-//        int newNextLast = getNewArrayNextLast();
-//        // Step 4: Copy data from old array to new array
-//        moveOldDataToNewArray(a, newNextFirst, newNextLast);
-//        // Step 5: assign old items to new array
-//        items = a;
-//        // Step 6: set new value for nextFirst and nextLast
-//        nextFirst = newNextFirst;
-//        nextLast = newNextLast;
-//    }
-//
-//    /* Return new nextFirst value if resize success */
-//    private int getNewArrayNextFirst(int capacity) {
-//        return nextFirst + (capacity - size);
-//    }
-//
-//    private int getNewArrayNextLast() {
-//        return nextLast;
-//    }
-//
-//    private void moveOldDataToNewArray(T[] newItems, int newNextFirst, int newNextLast) {
-//        int index = 0;
-//        for (int i = newNextFirst + 1; i < newItems.length; i += 1) {
-//            newItems[i] = get(index);
-//            index += 1;
-//        }
-//
-//        for (int j = 0; j <= newNextLast; j += 1) {
-//            newItems[j] = get(index);
-//            index += 1;
-//        }
-//    }
+    @Override
+    public Iterator<T> iterator() {
+        return new ArrayDequeIterator();
+    }
+
+    private class ArrayDequeIterator implements Iterator<T> {
+        private int currPos;
+
+        public ArrayDequeIterator() {
+            currPos = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currPos < size;
+        }
+
+        @Override
+        public T next() {
+            T item = get(currPos);
+            currPos += 1;
+            return item;
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o instanceof Deque otherDeque) {
+            if (this.size != otherDeque.size()) {
+                return false;
+            }
+            for (int i = 0; i < size; i += 1) {
+                if (this.get(i).equals(otherDeque.get(i))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 }
