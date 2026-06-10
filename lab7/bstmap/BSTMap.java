@@ -117,20 +117,86 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V>{
 
     @Override
     public V remove(K key) {
-        return remove(first, key);
+        if (!containsKey(key)) {
+            return null;
+        }
+        V old = get(key);
+        first = remove(first, key);
+        size--;
+        return old;
     }
 
-    private V remove(BSTNode node, K key) {
-        return null;
+    private BSTNode remove(BSTNode node, K key) {
+        if (node == null) {
+            return null;
+        }
+        int cmp = key.compareTo(node.key);
+        if (cmp < 0) {
+            node.leftNode = remove(node.leftNode, key);
+        } else if (cmp > 0) {
+            node.rightNode = remove(node.rightNode, key);
+        } else {
+            if (node.leftNode == null) {
+                return node.rightNode;
+            }
+            if (node.rightNode == null) {
+                return node.leftNode;
+            }
+            BSTNode replaceNode = min(node.rightNode);
+            node.key = replaceNode.key;
+            node.value = replaceNode.value;
+            node.rightNode = remove(node.rightNode, replaceNode.key);
+        }
+        return node;
     }
 
-    private V remove(BSTNode node, K key, V value) {
-        return null;
+    private BSTNode min(BSTNode node) {
+        if (node == null) {
+            return null;
+        }
+
+        if (node.leftNode == null) {
+            return node;
+        }
+        return min(node.leftNode);
     }
+
+//    private BSTNode remove(BSTNode node, K key, V value) {
+//        if (node == null) {
+//            return null;
+//        }
+//        int cmp = key.compareTo(node.key);
+//        if (cmp < 0) {
+//            node.leftNode = remove(node.leftNode, key, value);
+//        } else if (cmp > 0) {
+//            node.rightNode = remove(node.rightNode, key, value);
+//        } else {
+//            if (node.leftNode == null) {
+//                return node.rightNode;
+//            }
+//            if (node.rightNode == null) {
+//                return node.leftNode;
+//            }
+//            BSTNode replaceNode = min(node.rightNode);
+//            node.key = replaceNode.key;
+//            node.value = replaceNode.value;
+//            node.rightNode = remove(node.rightNode, replaceNode.key);
+//        }
+//        return node;
+//    }
 
     @Override
     public V remove(K key, V value) {
-        return remove(first, key, value);
+        BSTNode node = get(first, key);
+
+        if (node == null) {
+            return null;
+        }
+
+        if (!Objects.equals(node.value, value)) {
+            return null;
+        }
+        return remove(key);
     }
 
     @Override
