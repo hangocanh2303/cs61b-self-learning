@@ -148,8 +148,8 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         return size;
     }
 
-    private void resize() {
-        Collection<Node>[] newBuckets = createTable(buckets.length * 2);
+    private void resize(int capacity) {
+        Collection<Node>[] newBuckets = createTable(capacity);
         for (int i = 0; i < newBuckets.length; i += 1) {
             newBuckets[i] = createBucket();
         }
@@ -182,7 +182,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
             size += 1;
             int currentFactor = size / buckets.length;
             if (currentFactor > maxLoad) {
-                resize();
+                resize(buckets.length * 2);
             }
         }
     }
@@ -202,18 +202,47 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        Node node = getNode(key);
+        if (node == null) {
+            return null;
+        }else {
+            removeExistItem(node);
+        }
+        return node.value;
     }
 
     @Override
     public V remove(K key, V value) {
-        throw new UnsupportedOperationException();
+        Node node = getNode(key);
+        if (node == null) {
+            return null;
+        }else {
+            if (!node.value.equals(value)) {
+                return null;
+            }
+            else {
+                removeExistItem(node);
+            }
+
+        }
+        return node.value;
+    }
+
+    private void removeExistItem(Node node) {
+        int bucketIndex = Math.floorMod(node.key.hashCode(), buckets.length);
+        Collection<Node> items = buckets[bucketIndex];
+        Iterator<Node> iter = items.iterator();
+        while (iter.hasNext()) {
+            Node item = iter.next();
+            if (item.key.equals(node.key)) {
+                iter.remove();
+                size -= 1;
+            }
+        }
     }
 
     @Override
     public Iterator<K> iterator() {
         return keySet().iterator();
     }
-
-
 }
