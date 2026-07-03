@@ -28,10 +28,19 @@ commit is store commit file.
 5. TreeMap<String, String> fileNameToBlob: Map from file name to blob sha-1 id of files
 
 ### StagingArea
+This class represents a StagingArea that will be stored in a file. StagingArea contain add files and remove files 
+and save in .gitlet/index file 
+
+#### Fields
+
+1. TreeMap<String, String> addFiles: file name and blob sha-1 id of file 
+2. TreeSet<String> removeFiles: list remove file name 
 
 
 
+### Head
 
+### 
 
 
 ## Algorithms
