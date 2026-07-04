@@ -38,12 +38,63 @@ and save in .gitlet/index file
 
 
 
-### Head
+### Repository
 
-### 
+This is where the main logic of our program will live. This file will handle all of 
+the actual gitlet commands by reading/writing from/to the correct file, setting up 
+persistence, and additional error checking.
 
+It will also be responsible for setting up all persistence within gitlet. This includes 
+creating the .gitlet folder as well as the folder and file where we store all Commit objects and StagingArea.
+
+This class defers all Commit and StagingArea specific logic: for example, instead of 
+having the Repository class handle Commit serialization and deserialization, we have 
+the Commit class contain the logic for that.
+
+#### Fields
+1. static final File CWD = new File(System.getProperty("user.dir")) The Current Working 
+Directory. Since it has the package-private access modifier (i.e. no access modifier), 
+other classes in the package may use this field. It is useful for the other File 
+objects we need to use.
+
+2. static final File GITLETS_FOLDER = Utils.join(CWD, ".gitlet") The hidden .gitlet 
+directory. This is where all of the state of the Repository will be stored, 
+including additional things like the Commit objects and StagingArea. It is also 
+package private as other classes will use it to store their state.
+
+These fields are both static since we don’t actually instantiate a Repository object: 
+we simply use it to house functions. If we had additional non-static state (like the Commit class), 
+we’d need to serialize it and save it to a file.
+
+### Utils
+This class contains helpful utility methods to read/write objects or String 
+contents from/to files, as well as reporting errors when they occur.
+
+This is a staff-provided and PNH written class, so we leave the actual implementation 
+as magic and simply read the helpful javadoc comments above each method to give us 
+an idea of whether or not it’ll be useful for us.
+
+#### Fields
+Only some private fields to aid in the magic.
+
+###
 
 ## Algorithms
 
 ## Persistence
+The directory structure looks like this:
+![design-persistence.drawio.svg](image/design-persistence.drawio.svg)
+
+The Commit class will handle the serialization of Commit objects. It has two methods 
+that are useful for this:
+
+1. public static Commit fromFile(String commitId) - Given the id of a Commit object, 
+it retrieves the serialized data from the COMMIT_FOLDER (which is .gitlet.objects.commit) and 
+uses the Utils.readObject method to convert it to an instance of Commit.
+2. public void saveCommit() - Serializes this commit object to the COMMIT_FOLDER in a file 
+whose id is the same as the id of the Commit object 
+
+Same for StagingArea class 
+
+The HEAD file store in .gitlet place in Repository class 
 
