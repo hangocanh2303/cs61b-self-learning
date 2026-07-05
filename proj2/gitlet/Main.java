@@ -13,21 +13,21 @@ public class Main {
         if (args.length == 0) {
             Utils.exitWithError("Please enter a command.");
         }
-
         String firstArg = args[0];
-
         switch(firstArg) {
             case "init":
                 // TODO: handle the `init` command
+                validateNumArgs("cmd", args, 1);
                 Repository.initCommand();
                 break;
             case "add":
                 // TODO: handle the `add [filename]` command
                 break;
             // TODO: FILL THE REST IN
+            default:
+                Utils.exitWithError("No command with that name exists.");
         }
     }
-
 
     /**
      * Checks the number of arguments versus the expected number,
