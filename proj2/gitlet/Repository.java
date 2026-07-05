@@ -3,6 +3,8 @@ package gitlet;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import static gitlet.Utils.*;
 
@@ -41,8 +43,8 @@ public class Repository {
         mkdirGitletFolder();
         Commit commitZero = new Commit("initial commit", new Date(0), null, null);
         commitZero.saveCommit();
-        updateHead(MASTER_BRANCH);
-        createBranch(MASTER_BRANCH, commitZero.getCommitSha1());
+        Head.updateHead(MASTER_BRANCH);
+        Branch.createBranch(MASTER_BRANCH, commitZero.getCommitSha1());
     }
 
     public static void addCommand(String fileName) {
@@ -50,9 +52,19 @@ public class Repository {
         if (fileNames != null && !fileNames.contains(fileName)) {
             exitWithError("File does not exist.");
         }
-        File addFile = join(CWD, fileName);
-        byte[] contents = readContents(addFile);
-        String sha1File = sha1((Object) contents);
+        String sha1File = sha1FileCWD(fileName);
+        StagingArea stagingArea = StagingArea.loadStagingArea();
+
+        Commit headCommit = Commit.getHeadCommit();
+        String headCommitSha1 = headCommit.getCommitSha1();
+
+        if (sha1File.equals(headCommitSha1)) {
+            stagingArea.removeAddFile(fileName);
+        } else {
+            stagingArea.updateAddFiles(fileName, sha1File);
+        }
+        stagingArea.removeItemInRemoveFiles(fileName);
+        stagingArea.saveStagingArea();
     }
 
     private static void mkdirGitletFolder() {
@@ -63,18 +75,5 @@ public class Repository {
             Commit.COMMIT_FOLDER.mkdir();
             HEAD_DIR.mkdir();
         }
-    }
-
-    private static void updateHead(String branchName) {
-        String ref = "heads/" + branchName;
-        writeContents(HEAD_FILE, ref);
-    }
-
-    private static void createBranch(String branchName, String commitSha1) {
-        File branchFile = join(HEAD_DIR, branchName);
-        if (branchFile.exists()) {
-            exitWithError("A branch with that name already exists.");
-        }
-        writeContents(branchFile, commitSha1);
     }
 }

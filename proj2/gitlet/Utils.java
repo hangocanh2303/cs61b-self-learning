@@ -251,4 +251,10 @@ class Utils {
         }
         System.exit(0);
     }
+
+    public static String sha1FileCWD(String fileName) {
+        File addFile = join(Repository.CWD, fileName);
+        byte[] contents = readContents(addFile);
+        return sha1((Object) contents);
+    }
 }

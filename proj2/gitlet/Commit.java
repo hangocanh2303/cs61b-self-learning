@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Date; // TODO: You'll likely use this in this class
 
+import static gitlet.Utils.join;
+import static gitlet.Utils.readContentsAsString;
+
 /** Represents a gitlet commit object.
  *  TODO: It's a good idea to give a description here of what else this Class
  *  does at a high level.
@@ -58,5 +61,13 @@ public class Commit implements Serializable {
     public String getCommitSha1() {
         byte[] commitByteArray = Utils.serialize(this);
         return Utils.sha1((Object) commitByteArray);
+    }
+
+    public static Commit getHeadCommit() {
+        String ref = Utils.readContentsAsString(Repository.HEAD_FILE);
+        String branchName = ref.substring("heads/".length());
+        File branchFile = join(Repository.HEAD_DIR, branchName);
+        String commitSha1InBranchFile = readContentsAsString(branchFile);
+        return Commit.fromFile(commitSha1InBranchFile);
     }
 }
