@@ -17,11 +17,13 @@ public class Main {
         switch(firstArg) {
             case "init":
                 // TODO: handle the `init` command
-                validateNumArgs("cmd", args, 1);
+                validateNumArgs("init", args, 1);
                 Repository.initCommand();
                 break;
             case "add":
                 // TODO: handle the `add [filename]` command
+                validateNumArgs("add", args, 2);
+                Repository.addCommand(args[1]);
                 break;
             // TODO: FILL THE REST IN
             default:

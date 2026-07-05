@@ -2,6 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 import static gitlet.Utils.*;
 
@@ -28,16 +29,31 @@ public class Repository {
     /** The .gitlet directory. */
     public static final File GITLET_DIR = join(CWD, ".gitlet");
 
+    public static final File HEAD_FILE = join(GITLET_DIR, "HEAD");
+
+    public static final File HEAD_DIR = join(GITLET_DIR, "heads");
+
+    public static final String MASTER_BRANCH = "master";
+
     /* TODO: fill in the rest of this class. */
 
     public static void initCommand() {
         mkdirGitletFolder();
         Commit commitZero = new Commit("initial commit", new Date(0), null, null);
         commitZero.saveCommit();
-//        createHeadFile();
+        updateHead(MASTER_BRANCH);
+        createBranch(MASTER_BRANCH, commitZero.getCommitSha1());
     }
 
-
+    public static void addCommand(String fileName) {
+        List<String> fileNames = plainFilenamesIn(CWD);
+        if (fileNames != null && !fileNames.contains(fileName)) {
+            exitWithError("File does not exist.");
+        }
+        File addFile = join(CWD, fileName);
+        byte[] contents = readContents(addFile);
+        String sha1File = sha1((Object) contents);
+    }
 
     private static void mkdirGitletFolder() {
         if (GITLET_DIR.exists()) {
@@ -45,7 +61,20 @@ public class Repository {
         }else {
             GITLET_DIR.mkdir();
             Commit.COMMIT_FOLDER.mkdir();
+            HEAD_DIR.mkdir();
         }
     }
 
+    private static void updateHead(String branchName) {
+        String ref = "heads/" + branchName;
+        writeContents(HEAD_FILE, ref);
+    }
+
+    private static void createBranch(String branchName, String commitSha1) {
+        File branchFile = join(HEAD_DIR, branchName);
+        if (branchFile.exists()) {
+            exitWithError("A branch with that name already exists.");
+        }
+        writeContents(branchFile, commitSha1);
+    }
 }

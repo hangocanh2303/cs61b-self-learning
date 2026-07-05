@@ -46,13 +46,17 @@ public class Commit implements Serializable {
      * Save a commit to a file
      */
     public void saveCommit() {
-        byte[] commitByteArray = Utils.serialize(this);
-        File commit = Utils.join(COMMIT_FOLDER, Utils.sha1((Object) commitByteArray));
+        File commit = Utils.join(COMMIT_FOLDER, getCommitSha1());
         Utils.writeObject(commit, this);
     }
 
     public static Commit fromFile(String commitSha1Id) {
         File commit = Utils.join(COMMIT_FOLDER, commitSha1Id);
         return Utils.readObject(commit, Commit.class);
+    }
+
+    public String getCommitSha1() {
+        byte[] commitByteArray = Utils.serialize(this);
+        return Utils.sha1((Object) commitByteArray);
     }
 }
