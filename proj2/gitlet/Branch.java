@@ -13,4 +13,10 @@ public class Branch {
         }
         writeContents(branchFile, commitSha1);
     }
+
+    public static File getCurrentBranch() {
+        String ref = Utils.readContentsAsString(Repository.HEAD_FILE);
+        String branchName = ref.substring("heads/".length());
+        return join(Repository.HEAD_DIR, branchName);
+    }
 }

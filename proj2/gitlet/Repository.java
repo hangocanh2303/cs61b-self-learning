@@ -41,7 +41,7 @@ public class Repository {
 
     public static void initCommand() {
         mkdirGitletFolder();
-        Commit commitZero = new Commit("initial commit", new Date(0), null, null);
+        Commit commitZero = new Commit("initial commit", new Date(0), null, null, new TreeMap<>());
         commitZero.saveCommit();
         Head.updateHead(MASTER_BRANCH);
         Branch.createBranch(MASTER_BRANCH, commitZero.getCommitSha1());
@@ -64,6 +64,33 @@ public class Repository {
             stagingArea.updateAddFiles(fileName, sha1File);
         }
         stagingArea.removeItemInRemoveFiles(fileName);
+        stagingArea.saveStagingArea();
+    }
+
+    public static void commitCommand(String message) {
+        if (message == null || message.isBlank()) {
+            Utils.exitWithError("Please enter a commit message.");
+        }
+        StagingArea stagingArea = StagingArea.loadStagingArea();
+        if (stagingArea.isEmpty()) {
+            Utils.exitWithError("No changes added to the commit.");
+        }
+        Commit headCommit = Commit.getHeadCommit();
+
+        String oldSha1HeadCommit = headCommit.getCommitSha1();
+
+        headCommit.updateTrackedFiles(stagingArea);
+        headCommit.setMessage(message);
+        headCommit.setTimeStamp(new Date());
+        headCommit.setFirstParentId(oldSha1HeadCommit);
+        headCommit.saveCommit();
+
+        String newSha1HeadCommit = headCommit.getCommitSha1();
+        // update head commit
+        File branchFile = Branch.getCurrentBranch();
+        Utils.writeContents(branchFile, newSha1HeadCommit);
+        // clear and save staging area
+        stagingArea.clear();
         stagingArea.saveStagingArea();
     }
 

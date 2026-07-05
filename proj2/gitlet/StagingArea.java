@@ -69,6 +69,15 @@ public class StagingArea implements Dumpable {
         return new StagingArea(new TreeMap<>(), new TreeSet<>());
     }
 
+    public boolean isEmpty() {
+        return addFiles.isEmpty() && removeFiles.isEmpty();
+    }
+
+    public void clear() {
+        addFiles.clear();
+        removeFiles.clear();
+    }
+
     @Override
     public void dump() {
         System.out.println("addFiles: " + addFiles);

@@ -25,6 +25,10 @@ public class Main {
                 validateNumArgs("add", args, 2);
                 Repository.addCommand(args[1]);
                 break;
+            case "commit":
+                validateNumArgs("commit", args, 2);
+                Repository.commitCommand(args[1]);
+                break;
             // TODO: FILL THE REST IN
             default:
                 Utils.exitWithError("No command with that name exists.");

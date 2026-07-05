@@ -5,6 +5,8 @@ package gitlet;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Date; // TODO: You'll likely use this in this class
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import static gitlet.Utils.join;
 import static gitlet.Utils.readContentsAsString;
@@ -15,7 +17,7 @@ import static gitlet.Utils.readContentsAsString;
  *
  *  @author TODO
  */
-public class Commit implements Serializable {
+public class Commit implements Dumpable {
 
     static final File COMMIT_FOLDER = Utils.join(Repository.GITLET_DIR, "objects");
 
@@ -36,13 +38,35 @@ public class Commit implements Serializable {
 
     private String secondParentId;
 
+    private TreeMap<String, String> trackedFiles;
     /* TODO: fill in the rest of this class. */
 
-    public Commit(String message, Date timeStamp, String firstParentId, String secondParentId) {
+    public Commit(String message, Date timeStamp, String firstParentId, String secondParentId, TreeMap<String, String> trackedFiles) {
         this.message = message;
         this.timeStamp = timeStamp;
         this.firstParentId = firstParentId;
         this.secondParentId = secondParentId;
+        this.trackedFiles = trackedFiles;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setTimeStamp(Date timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public void setFirstParentId(String firstParentId) {
+        this.firstParentId = firstParentId;
+    }
+
+    public void setSecondParentId(String secondParentId) {
+        this.secondParentId = secondParentId;
+    }
+
+    public void setTrackedFiles(TreeMap<String, String> trackedFiles) {
+        this.trackedFiles = trackedFiles;
     }
 
     /**
@@ -69,5 +93,35 @@ public class Commit implements Serializable {
         File branchFile = join(Repository.HEAD_DIR, branchName);
         String commitSha1InBranchFile = readContentsAsString(branchFile);
         return Commit.fromFile(commitSha1InBranchFile);
+    }
+
+    public void updateTrackedFiles(StagingArea stagingArea) {
+        // update add files
+        TreeMap<String, String> addFiles = stagingArea.getAddFiles();
+        TreeSet<String> removeFiles = stagingArea.getRemoveFiles();
+        for(String fileName: addFiles.keySet()) {
+            String sha1OfItemAddFile = addFiles.get(fileName);
+            trackedFiles.put(fileName, sha1OfItemAddFile);
+        }
+        // update remove files
+        for (String fileName: removeFiles) {
+            trackedFiles.remove(fileName);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Commit{" +
+                "message='" + message + '\'' +
+                ", timeStamp=" + timeStamp +
+                ", firstParentId='" + firstParentId + '\'' +
+                ", secondParentId='" + secondParentId + '\'' +
+                ", trackedFiles=" + trackedFiles +
+                '}';
+    }
+
+    @Override
+    public void dump() {
+        System.out.println(this);
     }
 }
