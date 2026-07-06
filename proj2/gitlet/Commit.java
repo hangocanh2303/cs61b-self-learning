@@ -3,11 +3,8 @@ package gitlet;
 // TODO: any imports you need here
 
 import java.io.File;
-import java.io.Serializable;
-import java.util.Date; // TODO: You'll likely use this in this class
-import java.util.List;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static gitlet.Utils.join;
 import static gitlet.Utils.readContentsAsString;
@@ -21,6 +18,8 @@ import static gitlet.Utils.readContentsAsString;
 public class Commit implements Dumpable {
 
     static final File COMMIT_FOLDER = Utils.join(Repository.GITLET_DIR, "objects");
+
+//    SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.ENGLISH);
 
     /**
      * TODO: add instance variables here.
@@ -115,6 +114,15 @@ public class Commit implements Dumpable {
         return Commit.fromFile(fullSha1Commit);
     }
 
+    public void printCommitLog() {
+        System.out.println("===");
+        System.out.println("commit " + getCommitSha1());
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.ENGLISH);
+        System.out.println("Date: " + formatter.format(timeStamp));
+        System.out.println(message);
+        System.out.println();
+    }
+
     private static String findFullSha1CommitId(String commitId) {
         if (commitId.length() == 40)  {
             return commitId;
@@ -153,6 +161,14 @@ public class Commit implements Dumpable {
                 ", secondParentId='" + secondParentId + '\'' +
                 ", trackedFiles=" + trackedFiles +
                 '}';
+    }
+
+    public String getFirstParentId() {
+        return firstParentId;
+    }
+
+    public String getSecondParentId() {
+        return secondParentId;
     }
 
     @Override

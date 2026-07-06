@@ -32,6 +32,10 @@ public class Main {
             case "checkout":
                 checkout(args);
                 break;
+            case "log":
+                validateNumArgs("log", args, 1);
+                Repository.logCommand();
+                break;
             // TODO: FILL THE REST IN
             default:
                 Utils.exitWithError("No command with that name exists.");

@@ -118,6 +118,15 @@ public class Repository {
         checkoutFileFromCommit(targetCommit.getCommitSha1(), fileName);
     }
 
+    public static void logCommand() {
+        Commit commit = Commit.getHeadCommit();
+        while(commit != null) {
+            commit.printCommitLog();
+            String parentSha1 = commit.getFirstParentId();
+            commit = parentSha1 != null ? Commit.getCommitWithId(parentSha1) : null;
+        }
+    }
+
     private static void mkdirGitletFolder() {
         if (GITLET_DIR.exists()) {
             Utils.exitWithError("A Gitlet version-control system already exists in the current directory.");
