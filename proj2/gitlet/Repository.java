@@ -98,6 +98,26 @@ public class Repository {
         stagingArea.saveStagingArea();
     }
 
+    public static void checkoutFileFromCommit(String commitId, String fileName) {
+        Commit targetCommit = Commit.getCommitWithId(commitId);
+        if (targetCommit == null) {
+            Utils.exitWithError("No commit with that id exists.");
+        }
+        else {
+            if (!targetCommit.containFile(fileName)) {
+                Utils.exitWithError("File does not exist in that commit.");
+            }
+            byte[] blob = Blob.load(targetCommit.getBlobSha1(fileName));
+            File targetFileCWD = Utils.join(CWD, fileName);
+            Utils.writeContents(targetFileCWD, (Object) blob);
+        }
+    }
+
+    public static void checkoutFileFromHead(String fileName) {
+        Commit targetCommit = Commit.getHeadCommit();
+        checkoutFileFromCommit(targetCommit.getCommitSha1(), fileName);
+    }
+
     private static void mkdirGitletFolder() {
         if (GITLET_DIR.exists()) {
             Utils.exitWithError("A Gitlet version-control system already exists in the current directory.");

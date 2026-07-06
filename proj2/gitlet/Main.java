@@ -29,6 +29,9 @@ public class Main {
                 validateNumArgs("commit", args, 2);
                 Repository.commitCommand(args[1]);
                 break;
+            case "checkout":
+                checkout(args);
+                break;
             // TODO: FILL THE REST IN
             default:
                 Utils.exitWithError("No command with that name exists.");
@@ -47,6 +50,17 @@ public class Main {
         if (args.length != n) {
             throw new RuntimeException(
                     String.format("Invalid number of arguments for: %s.", cmd));
+        }
+    }
+
+    public static void checkout(String[] args) {
+        if (args.length == 4 && args[2].equals("--")) {
+            Repository.checkoutFileFromCommit(args[1], args[3]);
+        } else if (args.length == 3 && args[1].equals("--")) {
+            Repository.checkoutFileFromHead(args[2]);
+        }
+        else {
+            Utils.exitWithError("Incorrect operands.");
         }
     }
 }

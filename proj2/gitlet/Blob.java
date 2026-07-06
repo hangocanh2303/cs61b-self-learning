@@ -19,7 +19,8 @@ public class Blob {
         Utils.writeContents(blob, (Object) contents);
     }
 
-    public Blob load() {
-        return null;
+    public static byte[] load(String blobSha1) {
+        File blob = Utils.join(BLOB_FOLDER, blobSha1);
+        return Utils.readContents(blob);
     }
 }

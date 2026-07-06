@@ -5,6 +5,7 @@ package gitlet;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Date; // TODO: You'll likely use this in this class
+import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -82,6 +83,17 @@ public class Commit implements Dumpable {
         return Utils.readObject(commit, Commit.class);
     }
 
+    public boolean containFile(String fileName) {
+        return trackedFiles != null && trackedFiles.containsKey(fileName);
+    }
+
+    public String getBlobSha1(String fileName) {
+        if (containFile(fileName)) {
+            return trackedFiles.get(fileName);
+        }
+        return null;
+    }
+
     public String getCommitSha1() {
         byte[] commitByteArray = Utils.serialize(this);
         return Utils.sha1((Object) commitByteArray);
@@ -93,6 +105,29 @@ public class Commit implements Dumpable {
         File branchFile = join(Repository.HEAD_DIR, branchName);
         String commitSha1InBranchFile = readContentsAsString(branchFile);
         return Commit.fromFile(commitSha1InBranchFile);
+    }
+
+    public static Commit getCommitWithId(String commitId) {
+        String fullSha1Commit = findFullSha1CommitId(commitId);
+        if (fullSha1Commit == null) {
+            return null;
+        }
+        return Commit.fromFile(fullSha1Commit);
+    }
+
+    private static String findFullSha1CommitId(String commitId) {
+        if (commitId.length() == 40)  {
+            return commitId;
+        }
+        List<String> allIds = Utils.plainFilenamesIn(COMMIT_FOLDER);
+        if (allIds != null) {
+            for (String fullCommitId: allIds) {
+                if (fullCommitId.startsWith(commitId)) {
+                    return fullCommitId;
+                }
+            }
+        }
+        return null;
     }
 
     public void updateTrackedFiles(StagingArea stagingArea) {
