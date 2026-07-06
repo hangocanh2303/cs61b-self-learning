@@ -36,6 +36,14 @@ public class Main {
                 validateNumArgs("log", args, 1);
                 Repository.logCommand();
                 break;
+            case "global-log":
+                validateNumArgs("global-log", args, 1);
+                Repository.globalLogCommand();
+                break;
+            case "rm":
+                validateNumArgs("rm", args, 2);
+                Repository.rmCommand(args[1]);
+                break;
             // TODO: FILL THE REST IN
             default:
                 Utils.exitWithError("No command with that name exists.");

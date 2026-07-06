@@ -127,6 +127,37 @@ public class Repository {
         }
     }
 
+    public static void globalLogCommand() {
+        List<String> commits = Utils.plainFilenamesIn(Commit.COMMIT_FOLDER);
+        if (commits != null) {
+            for (String sha1Commit: commits) {
+                Commit commit = Commit.fromFile(sha1Commit);
+                commit.printCommitLog();
+            }
+        }
+    }
+
+    public static void rmCommand(String fileName) {
+        StagingArea stagingArea = StagingArea.loadStagingArea();
+        boolean rmFileNotInAddFiles = true;
+        if (stagingArea.getAddFiles().containsKey(fileName)) {
+            rmFileNotInAddFiles = false;
+            stagingArea.getAddFiles().remove(fileName);
+        }
+
+        Commit headCommit = Commit.getHeadCommit();
+
+        boolean rmFileNotInTrackedFiles = true;
+        if (headCommit.containFile(fileName)) {
+            stagingArea.getRemoveFiles().add(fileName);
+            Utils.restrictedDelete(fileName);
+            rmFileNotInTrackedFiles = false;
+        }
+        if (rmFileNotInAddFiles && rmFileNotInTrackedFiles) {
+            Utils.exitWithError("No reason to remove the file.");
+        }
+    }
+
     private static void mkdirGitletFolder() {
         if (GITLET_DIR.exists()) {
             Utils.exitWithError("A Gitlet version-control system already exists in the current directory.");
