@@ -61,6 +61,10 @@ public class Repository {
         if (sha1File.equals(headCommitSha1)) {
             stagingArea.removeAddFile(fileName);
         } else {
+            // save blob
+            File addFile = join(CWD, fileName);
+            Blob blob = new Blob(sha1File, Utils.readContents(addFile));
+            blob.save();
             stagingArea.updateAddFiles(fileName, sha1File);
         }
         stagingArea.removeItemInRemoveFiles(fileName);
@@ -101,6 +105,7 @@ public class Repository {
             GITLET_DIR.mkdir();
             Commit.COMMIT_FOLDER.mkdir();
             HEAD_DIR.mkdir();
+            Blob.BLOB_FOLDER.mkdir();
         }
     }
 }
