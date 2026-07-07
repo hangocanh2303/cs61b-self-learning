@@ -1,0 +1,11 @@
+Cú pháp	Ý nghĩa
+# ...	Comment
+> command args	Chạy lệnh, so sánh output với các dòng tiếp theo đến <<<
+<<<	Kết thúc expected output (<<<* = dùng regex)
+E filename	Assert file/directory phải tồn tại (Exists)
+* filename	Assert file không được tồn tại
++ dest src	Copy file vào test directory
+- filename	Xoá file
+T seconds	Đặt timeout
+D VAR "value"	Định nghĩa biến để substitution ${VAR}
+I file	Include file khác (vd: definitions.inc)
