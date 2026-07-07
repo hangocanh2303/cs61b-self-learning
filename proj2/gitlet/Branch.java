@@ -43,6 +43,12 @@ public class Branch {
         return Utils.plainFilenamesIn(Repository.HEAD_DIR);
     }
 
+    public static void updateCurrentBranch(String commitSha1) {
+        writeContents(getCurrentBranch(), commitSha1);
+    }
+
+
+
     /**
      * === Branches ===
      * *master

@@ -1,10 +1,7 @@
 package gitlet;
 
 import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 import static gitlet.Utils.*;
 
@@ -202,6 +199,42 @@ public class Repository {
         Branch.removeBranch(branchName);
     }
 
+    public static void resetCommand(String commitSha1) {
+        Commit targetCommit = Commit.getCommitWithId(commitSha1);
+        if (targetCommit == null) {
+            exitWithError("No commit with that id exists.");
+        } else {
+            Commit headCommit = Commit.getHeadCommit();
+            for (String fileName: headCommit.getTrackedFiles().keySet()) {
+                if (!targetCommit.containFile(fileName)) {
+                    restrictedDelete(fileName);
+                }
+            }
+
+            List<String> untrackedFiles = getUntrackedFiles(false);
+            for (String untrackedFile: untrackedFiles) {
+                if (targetCommit.containFile(untrackedFile)) {
+                    exitWithError("There is an untracked file in the way; " +
+                            "delete it, or add and commit it first.");
+                    return;
+                }
+            }
+
+            for (String fileName: targetCommit.getTrackedFiles().keySet()) {
+                checkoutFileFromCommit(commitSha1, fileName);
+            }
+
+            // Move pointer
+            Branch.updateCurrentBranch(Commit.findFullSha1CommitId(commitSha1));
+
+            // Staging area
+            StagingArea stagingArea = StagingArea.loadStagingArea();
+            stagingArea.clear();
+            stagingArea.saveStagingArea();
+
+        }
+    }
+
     private static void mkdirGitletFolder() {
         if (GITLET_DIR.exists()) {
             Utils.exitWithError("A Gitlet version-control system already " +
@@ -258,17 +291,26 @@ public class Repository {
 
     private static void untrackedFiles() {
         System.out.println("=== Untracked Files ===");
+        getUntrackedFiles(true);
+    }
+
+    private static List<String> getUntrackedFiles(boolean print) {
         StagingArea stagingArea = StagingArea.loadStagingArea();
         Commit headCommit = Commit.getHeadCommit();
         List<String> cwdFiles = Utils.plainFilenamesIn(CWD);
+        List<String> untrackedFiles = new ArrayList<>();
 
         if (cwdFiles != null) {
             for (String fileName: cwdFiles) {
                 if ((!stagingArea.isStagingAdd(fileName) && !headCommit.containFile(fileName))
                         || stagingArea.isStagingRemove(fileName)) {
-                    System.out.println(fileName);
+                    if (print) {
+                        System.out.println(fileName);
+                    }
+                    untrackedFiles.add(fileName);
                 }
             }
         }
+        return untrackedFiles;
     }
 }

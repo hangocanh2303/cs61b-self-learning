@@ -129,7 +129,7 @@ public class Commit implements Dumpable {
         System.out.println();
     }
 
-    private static String findFullSha1CommitId(String commitId) {
+    public static String findFullSha1CommitId(String commitId) {
         if (commitId.length() == FULL_COMMIT_SHA1_LEN)  {
             return commitId;
         }
