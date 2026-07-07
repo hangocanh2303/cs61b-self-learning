@@ -56,9 +56,9 @@ public class Repository {
         StagingArea stagingArea = StagingArea.loadStagingArea();
 
         Commit headCommit = Commit.getHeadCommit();
-        String headCommitSha1 = headCommit.getCommitSha1();
+        String headCommitBlobSha1 = headCommit.getBlobSha1(fileName);
 
-        if (sha1File.equals(headCommitSha1)) {
+        if (sha1File.equals(headCommitBlobSha1)) {
             stagingArea.removeAddFile(fileName);
         } else {
             // save blob
