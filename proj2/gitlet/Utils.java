@@ -257,4 +257,9 @@ class Utils {
         byte[] contents = readContents(addFile);
         return sha1((Object) contents);
     }
+
+    public static boolean isDeletedFromCWD(String fileName) {
+        List<String> cwdFiles = plainFilenamesIn(Repository.CWD);
+        return cwdFiles != null && !cwdFiles.contains(fileName);
+    }
 }

@@ -29,10 +29,6 @@ public class StagingArea implements Dumpable {
         this.addFiles.put(fileName, sha1File);
     }
 
-    public void updateRemoveFiles(String fileName) {
-        this.removeFiles.add(fileName);
-    }
-
     public void removeAddFile(String fileName) {
         this.addFiles.remove(fileName);
     }
@@ -47,6 +43,18 @@ public class StagingArea implements Dumpable {
 
     public static StagingArea fromFile() {
         return Utils.readObject(STAGING, StagingArea.class);
+    }
+
+    public String getStagingAddSha1(String fileName) {
+        return addFiles.get(fileName);
+    }
+
+    public boolean isStagingAdd(String fileName) {
+        return addFiles.containsKey(fileName);
+    }
+
+    public boolean isStagingRemove(String filename) {
+        return removeFiles.contains(filename);
     }
 
     public String getStagingAreaSha1() {

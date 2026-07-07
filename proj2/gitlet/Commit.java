@@ -69,6 +69,10 @@ public class Commit implements Dumpable {
         this.trackedFiles = trackedFiles;
     }
 
+    public TreeMap<String, String> getTrackedFiles() {
+        return trackedFiles;
+    }
+
     /**
      * Save a commit to a file
      */

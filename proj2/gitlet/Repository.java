@@ -187,6 +187,12 @@ public class Repository {
 
         stagingArea.printRemoveFiles();
         System.out.println();
+
+        modifyNotStagedForCommit();
+        System.out.println();
+
+        untrackedFiles();
+//        System.out.println();
     }
 
     private static void mkdirGitletFolder() {
@@ -197,6 +203,61 @@ public class Repository {
             Commit.COMMIT_FOLDER.mkdir();
             HEAD_DIR.mkdir();
             Blob.BLOB_FOLDER.mkdir();
+        }
+    }
+
+    private static void modifyNotStagedForCommit() {
+        System.out.println("=== Modifications Not Staged For Commit ===");
+
+        Commit headCommit = Commit.getHeadCommit();
+        StagingArea stagingArea = StagingArea.loadStagingArea();
+        TreeSet<String> allFiles = new TreeSet<>();
+        allFiles.addAll(Utils.plainFilenamesIn(CWD));
+        allFiles.addAll(stagingArea.getAddFiles().keySet());
+        allFiles.addAll(stagingArea.getRemoveFiles());
+        allFiles.addAll(headCommit.getTrackedFiles().keySet());
+
+        for (String fileName: allFiles) {
+            boolean inTrackedFile = headCommit.containFile(fileName);
+            if (Utils.isDeletedFromCWD(fileName)) {
+                // condition 3
+                if (stagingArea.isStagingAdd(fileName)) {
+                    System.out.println(fileName + " (deleted)");
+                } else if (!stagingArea.isStagingRemove(fileName) && inTrackedFile) { // condition 4
+                    System.out.println(fileName + " (deleted)");
+                }
+            } else {
+
+                String cwdSha1 = Utils.sha1FileCWD(fileName);
+                // condition 1
+                if (inTrackedFile) {
+                    if (!cwdSha1.equals(headCommit.getTrackedFiles().get(fileName))
+                            && !stagingArea.isStagingAdd(fileName) && !stagingArea.isStagingRemove(fileName)) {
+                        System.out.println(fileName + " (modified)");
+                    }
+                }
+
+                // condition 2
+                if (stagingArea.isStagingAdd(fileName) && !cwdSha1.equals(stagingArea.getAddFiles().get(fileName))) {
+                    System.out.println(fileName + " (modified)");
+                }
+            }
+        }
+
+    }
+
+    private static void untrackedFiles() {
+        System.out.println("=== Untracked Files ===");
+        StagingArea stagingArea = StagingArea.loadStagingArea();
+        Commit headCommit = Commit.getHeadCommit();
+        List<String> cwdFiles = Utils.plainFilenamesIn(CWD);
+
+        if (cwdFiles != null) {
+            for (String fileName: cwdFiles) {
+                if ((!stagingArea.isStagingAdd(fileName) && !headCommit.containFile(fileName)) || stagingArea.isStagingRemove(fileName)) {
+                    System.out.println(fileName);
+                }
+            }
         }
     }
 }
