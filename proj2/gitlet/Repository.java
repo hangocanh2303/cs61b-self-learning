@@ -193,6 +193,11 @@ public class Repository {
         untrackedFiles();
     }
 
+    public static void branchCommand(String fileName) {
+        Commit headCommit = Commit.getHeadCommit();
+        Branch.createBranch(fileName, headCommit.getCommitSha1());
+    }
+
     private static void mkdirGitletFolder() {
         if (GITLET_DIR.exists()) {
             Utils.exitWithError("A Gitlet version-control system already " +
