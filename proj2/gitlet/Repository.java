@@ -195,7 +195,8 @@ public class Repository {
 
     private static void mkdirGitletFolder() {
         if (GITLET_DIR.exists()) {
-            Utils.exitWithError("A Gitlet version-control system already exists in the current directory.");
+            Utils.exitWithError("A Gitlet version-control system already " +
+                    "exists in the current directory.");
         } else {
             GITLET_DIR.mkdir();
             Commit.COMMIT_FOLDER.mkdir();
@@ -230,13 +231,15 @@ public class Repository {
                 // condition 1
                 if (inTrackedFile) {
                     if (!cwdSha1.equals(headCommit.getTrackedFiles().get(fileName))
-                            && !stagingArea.isStagingAdd(fileName) && !stagingArea.isStagingRemove(fileName)) {
+                            && !stagingArea.isStagingAdd(fileName)
+                            && !stagingArea.isStagingRemove(fileName)) {
                         System.out.println(fileName + " (modified)");
                     }
                 }
 
                 // condition 2
-                if (stagingArea.isStagingAdd(fileName) && !cwdSha1.equals(stagingArea.getAddFiles().get(fileName))) {
+                if (stagingArea.isStagingAdd(fileName)
+                        && !cwdSha1.equals(stagingArea.getAddFiles().get(fileName))) {
                     System.out.println(fileName + " (modified)");
                 }
             }

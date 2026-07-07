@@ -122,7 +122,8 @@ public class Commit implements Dumpable {
     public void printCommitLog() {
         System.out.println("===");
         System.out.println("commit " + getCommitSha1());
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.ENGLISH);
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z",
+                Locale.ENGLISH);
         System.out.println("Date: " + formatter.format(timeStamp));
         System.out.println(message);
         System.out.println();
