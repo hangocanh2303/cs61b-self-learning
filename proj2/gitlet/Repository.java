@@ -114,6 +114,10 @@ public class Repository {
         checkoutFileFromCommit(targetCommit.getCommitSha1(), fileName);
     }
 
+    public static void checkoutBranch(String branchName) {
+
+    }
+
     public static void logCommand() {
         Commit commit = Commit.getHeadCommit();
         while (commit != null) {
