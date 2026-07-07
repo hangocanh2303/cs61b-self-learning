@@ -8,17 +8,17 @@ import java.util.TreeSet;
 
 import static gitlet.Utils.*;
 
-// TODO: any imports you need here
+// any imports you need here
 
 /** Represents a gitlet repository.
- *  TODO: It's a good idea to give a description here of what else this Class
+ *  It's a good idea to give a description here of what else this Class
  *  does at a high level.
  *
- *  @author TODO
+ *  @author anhhn
  */
 public class Repository {
     /**
-     * TODO: add instance variables here.
+     * add instance variables here.
      *
      * List all instance variables of the Repository class here with a useful
      * comment above them describing what that variable represents and how that
@@ -37,7 +37,7 @@ public class Repository {
 
     public static final String MASTER_BRANCH = "master";
 
-    /* TODO: fill in the rest of this class. */
+    /* fill in the rest of this class. */
 
     public static void initCommand() {
         mkdirGitletFolder();
@@ -102,8 +102,7 @@ public class Repository {
         Commit targetCommit = Commit.getCommitWithId(commitId);
         if (targetCommit == null) {
             Utils.exitWithError("No commit with that id exists.");
-        }
-        else {
+        } else {
             if (!targetCommit.containFile(fileName)) {
                 Utils.exitWithError("File does not exist in that commit.");
             }
@@ -120,7 +119,7 @@ public class Repository {
 
     public static void logCommand() {
         Commit commit = Commit.getHeadCommit();
-        while(commit != null) {
+        while (commit != null) {
             commit.printCommitLog();
             String parentSha1 = commit.getFirstParentId();
             commit = parentSha1 != null ? Commit.getCommitWithId(parentSha1) : null;
@@ -192,13 +191,12 @@ public class Repository {
         System.out.println();
 
         untrackedFiles();
-//        System.out.println();
     }
 
     private static void mkdirGitletFolder() {
         if (GITLET_DIR.exists()) {
             Utils.exitWithError("A Gitlet version-control system already exists in the current directory.");
-        }else {
+        } else {
             GITLET_DIR.mkdir();
             Commit.COMMIT_FOLDER.mkdir();
             HEAD_DIR.mkdir();
@@ -254,7 +252,8 @@ public class Repository {
 
         if (cwdFiles != null) {
             for (String fileName: cwdFiles) {
-                if ((!stagingArea.isStagingAdd(fileName) && !headCommit.containFile(fileName)) || stagingArea.isStagingRemove(fileName)) {
+                if ((!stagingArea.isStagingAdd(fileName) && !headCommit.containFile(fileName))
+                        || stagingArea.isStagingRemove(fileName)) {
                     System.out.println(fileName);
                 }
             }

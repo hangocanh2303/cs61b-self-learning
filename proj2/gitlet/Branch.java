@@ -1,10 +1,7 @@
 package gitlet;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-
 import static gitlet.Utils.*;
 
 public class Branch {
@@ -45,7 +42,7 @@ public class Branch {
         for (int i = 0; i < branches.size(); i += 1) {
             if (!branches.get(i).equals(currentBranch)) {
                 System.out.println(branches.get(i));
-            }else {
+            } else {
                 branches.set(i, "*" + currentBranch);
                 System.out.println(branches.get(i));
             }

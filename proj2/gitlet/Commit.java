@@ -1,6 +1,6 @@
 package gitlet;
 
-// TODO: any imports you need here
+// any imports you need here
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -10,19 +10,19 @@ import static gitlet.Utils.join;
 import static gitlet.Utils.readContentsAsString;
 
 /** Represents a gitlet commit object.
- *  TODO: It's a good idea to give a description here of what else this Class
+ *  It's a good idea to give a description here of what else this Class
  *  does at a high level.
  *
- *  @author TODO
+ *  @author anhhn
  */
 public class Commit implements Dumpable {
 
     static final File COMMIT_FOLDER = Utils.join(Repository.GITLET_DIR, "objects");
 
-//    SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.ENGLISH);
+    private static final int FULL_COMMIT_SHA1_LEN = 40;
 
     /**
-     * TODO: add instance variables here.
+     * add instance variables here.
      *
      * List all instance variables of the Commit class here with a useful
      * comment above them describing what that variable represents and how that
@@ -39,9 +39,10 @@ public class Commit implements Dumpable {
     private String secondParentId;
 
     private TreeMap<String, String> trackedFiles;
-    /* TODO: fill in the rest of this class. */
+    /* fill in the rest of this class. */
 
-    public Commit(String message, Date timeStamp, String firstParentId, String secondParentId, TreeMap<String, String> trackedFiles) {
+    public Commit(String message, Date timeStamp, String firstParentId,
+                  String secondParentId, TreeMap<String, String> trackedFiles) {
         this.message = message;
         this.timeStamp = timeStamp;
         this.firstParentId = firstParentId;
@@ -128,7 +129,7 @@ public class Commit implements Dumpable {
     }
 
     private static String findFullSha1CommitId(String commitId) {
-        if (commitId.length() == 40)  {
+        if (commitId.length() == FULL_COMMIT_SHA1_LEN)  {
             return commitId;
         }
         List<String> allIds = Utils.plainFilenamesIn(COMMIT_FOLDER);
@@ -146,7 +147,7 @@ public class Commit implements Dumpable {
         // update add files
         TreeMap<String, String> addFiles = stagingArea.getAddFiles();
         TreeSet<String> removeFiles = stagingArea.getRemoveFiles();
-        for(String fileName: addFiles.keySet()) {
+        for (String fileName: addFiles.keySet()) {
             String sha1OfItemAddFile = addFiles.get(fileName);
             trackedFiles.put(fileName, sha1OfItemAddFile);
         }
@@ -158,12 +159,18 @@ public class Commit implements Dumpable {
 
     @Override
     public String toString() {
-        return "Commit{" +
-                "message='" + message + '\'' +
-                ", timeStamp=" + timeStamp +
-                ", firstParentId='" + firstParentId + '\'' +
-                ", secondParentId='" + secondParentId + '\'' +
-                ", trackedFiles=" + trackedFiles +
+        return "Commit{"
+                +
+                "message='" + message + '\''
+                +
+                ", timeStamp=" + timeStamp
+                +
+                ", firstParentId='" + firstParentId + '\''
+                +
+                ", secondParentId='" + secondParentId + '\''
+                +
+                ", trackedFiles=" + trackedFiles
+                +
                 '}';
     }
 
