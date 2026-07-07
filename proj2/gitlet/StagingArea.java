@@ -25,14 +25,6 @@ public class StagingArea implements Dumpable {
         return removeFiles;
     }
 
-    public void setAddFiles(TreeMap<String, String> addFiles) {
-        this.addFiles = addFiles;
-    }
-
-    public void setRemoveFiles(TreeSet<String> removeFiles) {
-        this.removeFiles = removeFiles;
-    }
-
     public void updateAddFiles(String fileName, String sha1File) {
         this.addFiles.put(fileName, sha1File);
     }
@@ -76,6 +68,29 @@ public class StagingArea implements Dumpable {
     public void clear() {
         addFiles.clear();
         removeFiles.clear();
+    }
+
+    /**
+     * === Staged Files ===
+     * wug.txt
+     * wug2.txt
+    */
+    public void printAddFiles() {
+        System.out.println("=== Staged Files ===");
+        for (String fileName: addFiles.keySet()) {
+            System.out.println(fileName);
+        }
+    }
+
+    /**
+    * === Removed Files ===
+    * goodbye.txt
+    */
+    public void printRemoveFiles() {
+        System.out.println("=== Removed Files ===");
+        for (String fileName: removeFiles) {
+            System.out.println(fileName);
+        }
     }
 
     @Override

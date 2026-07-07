@@ -171,6 +171,10 @@ public class Commit implements Dumpable {
         return secondParentId;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
     @Override
     public void dump() {
         System.out.println(this);

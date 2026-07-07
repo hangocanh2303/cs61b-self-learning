@@ -44,6 +44,14 @@ public class Main {
                 validateNumArgs("rm", args, 2);
                 Repository.rmCommand(args[1]);
                 break;
+            case "find":
+                validateNumArgs("find", args, 2);
+                Repository.findCommand(args[1]);
+                break;
+            case "status":
+                validateNumArgs("status", args, 1);
+                Repository.statusCommand();
+                break;
             // TODO: FILL THE REST IN
             default:
                 Utils.exitWithError("No command with that name exists.");

@@ -143,6 +143,7 @@ public class Repository {
         if (stagingArea.getAddFiles().containsKey(fileName)) {
             rmFileNotInAddFiles = false;
             stagingArea.getAddFiles().remove(fileName);
+            stagingArea.saveStagingArea();
         }
 
         Commit headCommit = Commit.getHeadCommit();
@@ -152,10 +153,40 @@ public class Repository {
             stagingArea.getRemoveFiles().add(fileName);
             Utils.restrictedDelete(fileName);
             rmFileNotInTrackedFiles = false;
+            stagingArea.saveStagingArea();
         }
         if (rmFileNotInAddFiles && rmFileNotInTrackedFiles) {
             Utils.exitWithError("No reason to remove the file.");
         }
+    }
+
+    public static void findCommand(String message) {
+        List<String> commits = Utils.plainFilenamesIn(Commit.COMMIT_FOLDER);
+        boolean found = false;
+        if (commits != null) {
+            for (String sha1Commit: commits) {
+                Commit commit = Commit.fromFile(sha1Commit);
+                if (commit.getMessage().equals(message)) {
+                    System.out.println(sha1Commit);
+                    found = true;
+                }
+            }
+        }
+        if (!found) {
+            Utils.exitWithError("Found no commit with that message.");
+        }
+    }
+
+    public static void statusCommand() {
+        Branch.printAll();
+        System.out.println();
+
+        StagingArea stagingArea = StagingArea.loadStagingArea();
+        stagingArea.printAddFiles();
+        System.out.println();
+
+        stagingArea.printRemoveFiles();
+        System.out.println();
     }
 
     private static void mkdirGitletFolder() {

@@ -1,6 +1,9 @@
 package gitlet;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import static gitlet.Utils.*;
 
@@ -18,5 +21,34 @@ public class Branch {
         String ref = Utils.readContentsAsString(Repository.HEAD_FILE);
         String branchName = ref.substring("heads/".length());
         return join(Repository.HEAD_DIR, branchName);
+    }
+
+    public static String getCurrentBranchName() {
+        String ref = Utils.readContentsAsString(Repository.HEAD_FILE);
+        return ref.substring("heads/".length());
+    }
+
+    public static List<String> getAllBranch() {
+        return Utils.plainFilenamesIn(Repository.HEAD_DIR);
+    }
+
+    /**
+     * === Branches ===
+     * *master
+     * other-branch
+     */
+    public static void printAll() {
+        System.out.println("=== Branches ===");
+        String currentBranch = getCurrentBranchName();
+        List<String> branches = getAllBranch();
+        branches.sort(null);
+        for (int i = 0; i < branches.size(); i += 1) {
+            if (!branches.get(i).equals(currentBranch)) {
+                System.out.println(branches.get(i));
+            }else {
+                branches.set(i, "*" + currentBranch);
+                System.out.println(branches.get(i));
+            }
+        }
     }
 }
