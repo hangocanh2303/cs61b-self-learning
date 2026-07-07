@@ -198,6 +198,10 @@ public class Repository {
         Branch.createBranch(fileName, headCommit.getCommitSha1());
     }
 
+    public static void removeBranchCommand(String branchName) {
+        Branch.removeBranch(branchName);
+    }
+
     private static void mkdirGitletFolder() {
         if (GITLET_DIR.exists()) {
             Utils.exitWithError("A Gitlet version-control system already " +

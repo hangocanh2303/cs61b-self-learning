@@ -56,6 +56,10 @@ public class Main {
                 validateNumArgs("branch", args, 2);
                 Repository.branchCommand(args[1]);
                 break;
+            case "rm-branch":
+                validateNumArgs("rm-branch", args, 2);
+                Repository.removeBranchCommand(args[1]);
+                break;
             // FILL THE REST IN
             default:
                 Utils.exitWithError("No command with that name exists.");

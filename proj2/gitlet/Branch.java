@@ -14,6 +14,20 @@ public class Branch {
         writeContents(branchFile, commitSha1);
     }
 
+    public static void removeBranch(String branchName) {
+        File branchFile = join(Repository.HEAD_DIR, branchName);
+        if (!branchFile.exists()) {
+            exitWithError("A branch with that name does not exist.");
+        } else {
+          String currentBranch = getCurrentBranchName();
+          if (currentBranch.equals(branchName)) {
+              exitWithError("Cannot remove the current branch.");
+          } else {
+              branchFile.delete();
+          }
+        }
+    }
+
     public static File getCurrentBranch() {
         String ref = Utils.readContentsAsString(Repository.HEAD_FILE);
         String branchName = ref.substring("heads/".length());
