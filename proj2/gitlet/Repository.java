@@ -319,7 +319,9 @@ public class Repository {
         }
 
         // step 2: split point detected
-        Commit splitPointCommit = Commit.getSplitPointCommit();
+        String splitPointCommitSha1 = Commit.findSplitPointCommit(currentHeadCommit, targetBranchCommit);
+        Commit splitPointCommit = Commit.getCommitWithId(splitPointCommitSha1);
+
         // step 3: condition merge
 
         // step 4: create merge commit and commit

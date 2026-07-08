@@ -119,8 +119,62 @@ public class Commit implements Dumpable {
         return Commit.fromFile(fullSha1Commit);
     }
 
-    public static Commit getSplitPointCommit() {
+    public static String findSplitPointCommit(Commit currentHeadCommit, Commit targetBranchCommit) {
+        Set<String> allParents = bfs(currentHeadCommit);
+        Queue<String> queue = new ArrayDeque<>();
+        Set<String> visited = new HashSet<>();
+        String sha1TargetCommit = targetBranchCommit.getCommitSha1();
+        visited.add(sha1TargetCommit);
+        queue.add(sha1TargetCommit);
+        while (!queue.isEmpty()) {
+            String commitSha1 = queue.remove();
+            if (allParents.contains(commitSha1)) {
+                return commitSha1;
+            }
+            for (String parent: Commit.adj(commitSha1)) {
+                if (!visited.contains(parent)) {
+                    visited.add(parent);
+                    queue.add(parent);
+                }
+            }
+
+        }
         return null;
+    }
+
+    private static Set<String> bfs(Commit commit) {
+        Set<String> visited = new HashSet<>();
+        Queue<String> queue = new ArrayDeque<>();
+        String sha1SourceCommit = commit.getCommitSha1();
+        queue.add(sha1SourceCommit);
+        visited.add(sha1SourceCommit);
+
+        while (!queue.isEmpty()) {
+            String commitSha1 = queue.remove();
+            for (String parent: Commit.adj(commitSha1)) {
+                if (!visited.contains(parent)) {
+                    visited.add(parent);
+                    queue.add(parent);
+                }
+            }
+        }
+        return visited;
+    }
+
+    public static List<String> adj(String sha1Commit) {
+        Commit child = getCommitWithId(sha1Commit);
+        List<String> adjs = new ArrayList<>();
+        if (child != null) {
+            String firstParent = child.getFirstParentId();
+            if (firstParent != null) {
+                adjs.add(firstParent);
+            }
+            String secondParent = child.getSecondParentId();
+            if (secondParent != null) {
+                adjs.add(secondParent);
+            }
+        }
+        return adjs;
     }
 
     public void printCommitLog() {
