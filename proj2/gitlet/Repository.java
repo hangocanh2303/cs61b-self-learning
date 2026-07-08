@@ -115,7 +115,54 @@ public class Repository {
     }
 
     public static void checkoutBranch(String branchName) {
+        File branchFile = join(Repository.HEAD_DIR, branchName);
+        if (!branchFile.exists()) {
+            exitWithError("No such branch exists.");
+        } else {
+            String currentBranch = Branch.getCurrentBranchName();
+            if (currentBranch.equals(branchName)) {
+                exitWithError("No need to checkout the current branch.");
+            } else {
+                Commit currentHeadCommit = Commit.getHeadCommit();
+                Commit targetCommit = Commit.getCommitWithId(readContentsAsString(branchFile));
+                List<String> untrackedFiles = getUntrackedFiles(false);
+                for (String untrackedFile: untrackedFiles) {
+                    if (targetCommit != null && targetCommit.containFile(untrackedFile)) {
+                        exitWithError("There is an untracked file in the way; " +
+                                "delete it, or add and commit it first.");
+                        return;
+                    }
+                }
 
+                // write content from target commit to cwd
+                TreeMap<String, String> targetCommitTrackedFiles = targetCommit != null ? targetCommit.getTrackedFiles() : new TreeMap<>();
+                if (targetCommit != null) {
+                    for (String fileName: targetCommitTrackedFiles.keySet()) {
+                        byte[] blob = Blob.load(targetCommitTrackedFiles.get(fileName));
+                        writeContents(join(CWD, fileName), (Object) blob);
+                    }
+                }
+
+                // update head file to branch name
+                Head.updateHead(branchName);
+
+                // delete tracked files head but not in target (cwd)
+                TreeMap<String, String> currentHeadCommitTrackedFiles = currentHeadCommit != null ? currentHeadCommit.getTrackedFiles() : new TreeMap<>();
+                if (targetCommit != null) {
+                    for (String fileName: currentHeadCommitTrackedFiles.keySet()) {
+                        if (!targetCommit.containFile(fileName)) {
+                            restrictedDelete(fileName);
+                        }
+                    }
+                }
+
+                // update staging area
+                StagingArea stagingArea = StagingArea.loadStagingArea();
+                stagingArea.clear();
+                stagingArea.saveStagingArea();
+
+            }
+        }
     }
 
     public static void logCommand() {
