@@ -19,12 +19,12 @@ public class Branch {
         if (!branchFile.exists()) {
             exitWithError("A branch with that name does not exist.");
         } else {
-          String currentBranch = getCurrentBranchName();
-          if (currentBranch.equals(branchName)) {
-              exitWithError("Cannot remove the current branch.");
-          } else {
-              branchFile.delete();
-          }
+            String currentBranch = getCurrentBranchName();
+            if (currentBranch.equals(branchName)) {
+                exitWithError("Cannot remove the current branch.");
+            } else {
+                branchFile.delete();
+            }
         }
     }
 

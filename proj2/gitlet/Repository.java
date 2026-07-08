@@ -128,14 +128,16 @@ public class Repository {
                 List<String> untrackedFiles = getUntrackedFiles(false);
                 for (String untrackedFile: untrackedFiles) {
                     if (targetCommit != null && targetCommit.containFile(untrackedFile)) {
-                        exitWithError("There is an untracked file in the way; " +
+                        exitWithError("There is an untracked file in the way; "
+                                +
                                 "delete it, or add and commit it first.");
                         return;
                     }
                 }
 
                 // write content from target commit to cwd
-                TreeMap<String, String> targetCommitTrackedFiles = targetCommit != null ? targetCommit.getTrackedFiles() : new TreeMap<>();
+                TreeMap<String, String> targetCommitTrackedFiles = targetCommit != null
+                        ? targetCommit.getTrackedFiles() : new TreeMap<>();
                 if (targetCommit != null) {
                     for (String fileName: targetCommitTrackedFiles.keySet()) {
                         byte[] blob = Blob.load(targetCommitTrackedFiles.get(fileName));
@@ -147,7 +149,8 @@ public class Repository {
                 Head.updateHead(branchName);
 
                 // delete tracked files head but not in target (cwd)
-                TreeMap<String, String> currentHeadCommitTrackedFiles = currentHeadCommit != null ? currentHeadCommit.getTrackedFiles() : new TreeMap<>();
+                TreeMap<String, String> currentHeadCommitTrackedFiles = currentHeadCommit != null
+                        ? currentHeadCommit.getTrackedFiles() : new TreeMap<>();
                 if (targetCommit != null) {
                     for (String fileName: currentHeadCommitTrackedFiles.keySet()) {
                         if (!targetCommit.containFile(fileName)) {
@@ -265,7 +268,8 @@ public class Repository {
             List<String> untrackedFiles = getUntrackedFiles(false);
             for (String untrackedFile: untrackedFiles) {
                 if (targetCommit.containFile(untrackedFile)) {
-                    exitWithError("There is an untracked file in the way; " +
+                    exitWithError("There is an untracked file in the way; "
+                            +
                             "delete it, or add and commit it first.");
                     return;
                 }
@@ -288,7 +292,8 @@ public class Repository {
 
     private static void mkdirGitletFolder() {
         if (GITLET_DIR.exists()) {
-            Utils.exitWithError("A Gitlet version-control system already " +
+            Utils.exitWithError("A Gitlet version-control system already "
+                    +
                     "exists in the current directory.");
         } else {
             GITLET_DIR.mkdir();

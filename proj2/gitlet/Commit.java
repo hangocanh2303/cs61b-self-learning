@@ -131,7 +131,11 @@ public class Commit implements Dumpable {
 
     public static String findFullSha1CommitId(String commitId) {
         if (commitId.length() == FULL_COMMIT_SHA1_LEN)  {
-            return commitId;
+            File commitFile = join(COMMIT_FOLDER, commitId);
+            if (commitFile.exists()) {
+                return commitId;
+            }
+            return null;
         }
         List<String> allIds = Utils.plainFilenamesIn(COMMIT_FOLDER);
         if (allIds != null) {
