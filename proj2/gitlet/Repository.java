@@ -369,4 +369,12 @@ public class Repository {
         }
         return untrackedFiles;
     }
+
+    public static void validateGitletFolder() {
+        if (!GITLET_DIR.exists()) {
+            exitWithError("Not in an initialized "
+                    +
+                    "Gitlet directory.");
+        }
+    }
 }

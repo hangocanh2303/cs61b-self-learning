@@ -23,45 +23,56 @@ public class Main {
             case "add":
                 // handle the `add [filename]` command
                 validateNumArgs("add", args, 2);
+                Repository.validateGitletFolder();
                 Repository.addCommand(args[1]);
                 break;
             case "commit":
                 validateNumArgs("commit", args, 2);
+                Repository.validateGitletFolder();
                 Repository.commitCommand(args[1]);
                 break;
             case "checkout":
+                Repository.validateGitletFolder();
                 checkout(args);
                 break;
             case "log":
                 validateNumArgs("log", args, 1);
+                Repository.validateGitletFolder();
                 Repository.logCommand();
                 break;
             case "global-log":
                 validateNumArgs("global-log", args, 1);
+                Repository.validateGitletFolder();
                 Repository.globalLogCommand();
                 break;
             case "rm":
                 validateNumArgs("rm", args, 2);
+                Repository.validateGitletFolder();
                 Repository.rmCommand(args[1]);
                 break;
             case "find":
                 validateNumArgs("find", args, 2);
+                Repository.validateGitletFolder();
                 Repository.findCommand(args[1]);
                 break;
             case "status":
                 validateNumArgs("status", args, 1);
+                Repository.validateGitletFolder();
                 Repository.statusCommand();
                 break;
             case "branch":
                 validateNumArgs("branch", args, 2);
+                Repository.validateGitletFolder();
                 Repository.branchCommand(args[1]);
                 break;
             case "rm-branch":
                 validateNumArgs("rm-branch", args, 2);
+                Repository.validateGitletFolder();
                 Repository.removeBranchCommand(args[1]);
                 break;
             case "reset":
                 validateNumArgs("reset", args, 2);
+                Repository.validateGitletFolder();
                 Repository.resetCommand(args[1]);
                 break;
             // FILL THE REST IN
