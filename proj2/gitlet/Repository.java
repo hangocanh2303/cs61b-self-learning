@@ -290,6 +290,10 @@ public class Repository {
         }
     }
 
+    public static void mergeCommand(String branchName) {
+        // implement merge command
+    }
+
     private static void mkdirGitletFolder() {
         if (GITLET_DIR.exists()) {
             Utils.exitWithError("A Gitlet version-control system already "

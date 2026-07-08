@@ -75,6 +75,11 @@ public class Main {
                 Repository.validateGitletFolder();
                 Repository.resetCommand(args[1]);
                 break;
+            case "merge":
+                validateNumArgs("merge", args, 2);
+                Repository.validateGitletFolder();
+                Repository.mergeCommand(args[1]);
+                break;
             // FILL THE REST IN
             default:
                 Utils.exitWithError("No command with that name exists.");

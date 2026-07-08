@@ -1,4 +1,4 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.8 Chrome/140.0.7339.240 Electron/38.4.0 Safari/537.36" version="28.2.8" pages="15">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.8 Chrome/140.0.7339.240 Electron/38.4.0 Safari/537.36" version="28.2.8" pages="16">
   <diagram id="ffg2tlrhGw32lAn2AQQx" name="persistence">
     <mxGraphModel dx="1662" dy="857" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -1729,6 +1729,293 @@
         </mxCell>
         <mxCell id="T_z4rwT2dbb5EW_QPYh0-23" value="update head branch&amp;nbsp;&lt;br&gt;to target commit" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="kIUb7y8fyCJZ1Kn06nHp-1">
           <mxGeometry x="130" y="1140" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="merge" id="3W-19P0likDo5cY_XpFQ">
+    <mxGraphModel dx="1702" dy="1029" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="ckNod2OmMd_smEYL4Izx-0" />
+        <mxCell id="ckNod2OmMd_smEYL4Izx-1" parent="ckNod2OmMd_smEYL4Izx-0" />
+        <mxCell id="ckNod2OmMd_smEYL4Izx-2" value="java gitlet.Main merge [branch name]" style="text;whiteSpace=wrap;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="80" y="30" width="280" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ckNod2OmMd_smEYL4Izx-3" value="" style="ellipse;html=1;shape=startState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="305" y="140" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ckNod2OmMd_smEYL4Izx-4" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="ckNod2OmMd_smEYL4Izx-3" target="ckNod2OmMd_smEYL4Izx-6">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="ckNod2OmMd_smEYL4Izx-6" target="giIFZH4jGTpLNCzYzvda-0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ckNod2OmMd_smEYL4Izx-6" value="&lt;div style=&quot;text-align: left;&quot;&gt;java gitlet.Main merge [branch name]&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="180" y="210" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-0" target="giIFZH4jGTpLNCzYzvda-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-4" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="giIFZH4jGTpLNCzYzvda-3">
+          <mxGeometry x="-0.0957" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-0" target="giIFZH4jGTpLNCzYzvda-9">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="500.0000000000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-7" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="giIFZH4jGTpLNCzYzvda-6">
+          <mxGeometry x="-0.2533" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-0" value="staging area&lt;div&gt;add, remove not empty?&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="225" y="310" width="190" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-2" value="You have uncommitted changes." style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="330" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-8" value="A branch with that name does not exist." style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="475" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-9" target="giIFZH4jGTpLNCzYzvda-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-12" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="giIFZH4jGTpLNCzYzvda-11">
+          <mxGeometry x="-0.1093" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-9" target="giIFZH4jGTpLNCzYzvda-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-15" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="giIFZH4jGTpLNCzYzvda-14">
+          <mxGeometry x="-0.171" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-9" value="File branch exist?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="242.5" y="460" width="155" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-13" target="giIFZH4jGTpLNCzYzvda-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-18" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="giIFZH4jGTpLNCzYzvda-17">
+          <mxGeometry x="-0.0759" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-13" target="giIFZH4jGTpLNCzYzvda-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-22" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="giIFZH4jGTpLNCzYzvda-21">
+          <mxGeometry x="-0.1023" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-13" value="branch name =&amp;nbsp;&lt;div&gt;current branch?&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="242.5" y="600" width="155" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-16" value="Cannot merge a branch with itself." style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="615" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-25" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-19" target="giIFZH4jGTpLNCzYzvda-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-26" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="giIFZH4jGTpLNCzYzvda-25">
+          <mxGeometry x="-0.1348" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-19" target="giIFZH4jGTpLNCzYzvda-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-30" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="giIFZH4jGTpLNCzYzvda-29">
+          <mxGeometry x="-0.1297" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-19" value="untracked file in head&lt;div&gt;!= tracked file in target&lt;/div&gt;&lt;div&gt;commit (sha1,&amp;nbsp;&lt;/div&gt;&lt;div&gt;same file name)&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="207" y="750" width="226" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-23" value="There is an untracked file in the way; delete it, or add and commit it first." style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="775" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-28" target="giIFZH4jGTpLNCzYzvda-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-28" value="Split point commit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="260" y="910" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-31" target="giIFZH4jGTpLNCzYzvda-34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-36" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="giIFZH4jGTpLNCzYzvda-35">
+          <mxGeometry x="-0.0257" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-31" target="giIFZH4jGTpLNCzYzvda-37">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-39" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="giIFZH4jGTpLNCzYzvda-38">
+          <mxGeometry x="-0.2952" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-31" value="split point = target&amp;nbsp;&lt;div&gt;branch commit ?&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="242.5" y="1010" width="155" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-34" value="Given branch is an ancestor of the current branch." style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="1025" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-37" target="giIFZH4jGTpLNCzYzvda-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-42" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="giIFZH4jGTpLNCzYzvda-41">
+          <mxGeometry x="-0.1595" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-37" target="giIFZH4jGTpLNCzYzvda-45">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-47" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="giIFZH4jGTpLNCzYzvda-46">
+          <mxGeometry x="-0.28" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-37" value="split point = current&amp;nbsp;&lt;div&gt;branch&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="242.5" y="1150" width="155" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-40" target="giIFZH4jGTpLNCzYzvda-43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-40" value="check out target&amp;nbsp;&lt;div&gt;branch&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="1165" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-43" value="Print: Current branch fast-forwarded." style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="660" y="1165" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-45" target="giIFZH4jGTpLNCzYzvda-49">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="460" y="1320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-45" target="giIFZH4jGTpLNCzYzvda-50">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-45" value="condition 1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="260" y="1290" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-49" value="target branch commit file change from split point&lt;div&gt;but not change in current branch from split point&lt;/div&gt;&lt;div&gt;-&amp;gt; checkout change file -&amp;gt; add to staging&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="1270" width="300" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-50" target="giIFZH4jGTpLNCzYzvda-54">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-50" value="condition 2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="260" y="1400" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-52" value="file change in current branch but not change in target&lt;div&gt;branch from split point -&amp;gt; no need to change&amp;nbsp;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="1380" width="300" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-50" target="giIFZH4jGTpLNCzYzvda-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-54" target="giIFZH4jGTpLNCzYzvda-58">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-54" value="condition 3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="260" y="1520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-56" value="file same (content or deleted) in current and target commit -&amp;gt; no need to change" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="1500" width="300" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-57" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-54" target="giIFZH4jGTpLNCzYzvda-56">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-63" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-58" target="giIFZH4jGTpLNCzYzvda-62">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-58" value="condition 4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="260" y="1640" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-60" value="file not in split point but exist in current branch&amp;nbsp;&lt;div&gt;-&amp;gt; keep file&amp;nbsp;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="1620" width="300" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-61" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-58" target="giIFZH4jGTpLNCzYzvda-60">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-69" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-62" target="giIFZH4jGTpLNCzYzvda-66">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-62" value="condition 5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="260" y="1760" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-64" value="file not in split point but exist in target branch&amp;nbsp;&lt;div&gt;-&amp;gt; checkout file and staging it&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="1740" width="300" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-62" target="giIFZH4jGTpLNCzYzvda-64">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-73" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-66" target="giIFZH4jGTpLNCzYzvda-70">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-66" value="condition 6" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="260" y="1880" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-67" value="file in split point and not change in current branch, but not exist in target branch&amp;nbsp;&amp;nbsp;&lt;div&gt;-&amp;gt; delete it from cwd&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="1860" width="300" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-66" target="giIFZH4jGTpLNCzYzvda-67">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-77" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-70" target="giIFZH4jGTpLNCzYzvda-74">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-70" value="condition 7" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="260" y="2010" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-71" value="file in split point and not change in target branch, but not exist in current branch&amp;nbsp;&amp;nbsp;&lt;div&gt;-&amp;gt; file continue not exist&amp;nbsp;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="1990" width="300" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-72" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-70" target="giIFZH4jGTpLNCzYzvda-71">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-79" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-74" target="giIFZH4jGTpLNCzYzvda-78">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-74" value="condition 8" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="260" y="2130" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-81" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-75" target="giIFZH4jGTpLNCzYzvda-80">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-75" value="file in current != file in target or&amp;nbsp;&lt;div&gt;file change, remain file (same name) is deleted&lt;/div&gt;&lt;div&gt;or file not exits in split point but content file change in current and target branch&amp;nbsp;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="480" y="2110" width="300" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-76" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-74" target="giIFZH4jGTpLNCzYzvda-75">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-83" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ckNod2OmMd_smEYL4Izx-1" source="giIFZH4jGTpLNCzYzvda-78" target="giIFZH4jGTpLNCzYzvda-82">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-78" value="create new commit:&amp;nbsp;&lt;div&gt;Merged [given branch name] into [current branch name].&lt;/div&gt;&lt;div&gt;firstParent: head of current branch&lt;/div&gt;&lt;div&gt;secondParent: head of target branch&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="235" y="2250" width="170" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-80" value="Print:&amp;nbsp;&lt;div&gt;Encountered a merge conflict.&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="570" y="2250" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-82" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="305" y="2440" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="giIFZH4jGTpLNCzYzvda-84" value="Split point commit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="ckNod2OmMd_smEYL4Izx-1">
+          <mxGeometry x="1480" y="125" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
