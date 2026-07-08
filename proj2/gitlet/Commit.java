@@ -119,6 +119,10 @@ public class Commit implements Dumpable {
         return Commit.fromFile(fullSha1Commit);
     }
 
+    public static Commit getSplitPointCommit() {
+        return null;
+    }
+
     public void printCommitLog() {
         System.out.println("===");
         System.out.println("commit " + getCommitSha1());

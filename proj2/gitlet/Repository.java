@@ -292,6 +292,42 @@ public class Repository {
 
     public static void mergeCommand(String branchName) {
         // implement merge command
+        Commit currentHeadCommit = Commit.getHeadCommit();
+        File branchFile = join(Repository.HEAD_DIR, branchName);
+        Commit targetBranchCommit = Commit.getCommitWithId(readContentsAsString(branchFile));
+        StagingArea stagingArea = StagingArea.loadStagingArea();
+        List<String> untrackedFiles = getUntrackedFiles(false);
+        TreeMap<String, String> targetTrackedFiles = targetBranchCommit != null
+                ? targetBranchCommit.getTrackedFiles() : new TreeMap<>();
+
+        // step 1: validate merge
+        if (!stagingArea.isEmpty()) {
+            exitWithError("You have uncommitted changes.");
+        }
+
+        if (!branchFile.exists()) {
+            exitWithError("A branch with that name does not exist.");
+        }
+
+        String currentBranchName = Branch.getCurrentBranchName();
+        if (currentBranchName.equals(branchFile.getName())) {
+            exitWithError("Cannot merge a branch with itself.");
+        }
+
+        for (String fileName: untrackedFiles) {
+
+        }
+
+        // step 2: split point detected
+        Commit splitPointCommit = Commit.getSplitPointCommit();
+        // step 3: condition merge
+
+        // step 4: create merge commit and commit
+
+    }
+
+    private static void rejectMergeIfNeed(File branchFile, StagingArea stagingArea) {
+
     }
 
     private static void mkdirGitletFolder() {
