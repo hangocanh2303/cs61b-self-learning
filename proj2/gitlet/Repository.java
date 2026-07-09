@@ -328,8 +328,9 @@ public class Repository {
 
     }
 
-    private static void rejectMergeIfNeed(File branchFile, StagingArea stagingArea) {
-
+    private static MergeAction mergeAction(String fileName, Commit splitPoint,
+                                    Commit currentHeadCommit, Commit targetBranchCommit) {
+        return null;
     }
 
     private static void mkdirGitletFolder() {
