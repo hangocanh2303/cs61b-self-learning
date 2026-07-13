@@ -314,23 +314,58 @@ public class Repository {
             exitWithError("Cannot merge a branch with itself.");
         }
 
-        for (String fileName: untrackedFiles) {
-
-        }
-
         // step 2: split point detected
         String splitPointCommitSha1 = Commit.findSplitPointCommit(currentHeadCommit, targetBranchCommit);
         Commit splitPointCommit = Commit.getCommitWithId(splitPointCommitSha1);
 
         // step 3: condition merge
+        Map<String, MergeAction> mergePlan = new HashMap<>();
+        Set<String> allFileCheckMerge = getAllFilesCheckMerge(splitPointCommit, currentHeadCommit, targetBranchCommit);
+        for (String fileName: allFileCheckMerge) {
+            MergeAction action = mergeAction(fileName, splitPointCommit, currentHeadCommit, targetBranchCommit);
+            mergePlan.put(fileName, action);
+        }
 
-        // step 4: create merge commit and commit
+        // Step 4:
+        for (String fileName: untrackedFiles) {
+            exitWithError("There is an untracked file in the way; delete it, or add and commit it first.");
+        }
+        // step 5: create a merge commit and commit
+        for (Map.Entry<String, MergeAction> entry : mergePlan.entrySet()) {
+
+        }
 
     }
 
     private static MergeAction mergeAction(String fileName, Commit splitPoint,
                                     Commit currentHeadCommit, Commit targetBranchCommit) {
-        return null;
+        String sha1FileInSplitPoint = splitPoint.getBlobSha1(fileName);
+        String sha1FileInCurrentHead = currentHeadCommit.getBlobSha1(fileName);
+        String sha1FileInTarget = targetBranchCommit.getBlobSha1(fileName);
+        // condition 1, 5, 6
+        if (!Objects.equals(sha1FileInSplitPoint, sha1FileInTarget)
+                && Objects.equals(sha1FileInSplitPoint, sha1FileInCurrentHead)) {
+            return MergeAction.OVERWRITE_FROM_TARGET;
+        }
+        // condition 2, 4, 7
+        if (!Objects.equals(sha1FileInSplitPoint, sha1FileInCurrentHead)
+                && Objects.equals(sha1FileInSplitPoint, sha1FileInTarget)) {
+            return MergeAction.DO_NOTHING;
+        }
+        // condition 3
+        if (Objects.equals(sha1FileInCurrentHead, sha1FileInTarget)) {
+            return MergeAction.DO_NOTHING;
+        }
+        return MergeAction.CONFLICT;
+    }
+
+    private static Set<String> getAllFilesCheckMerge(Commit splitCommit, Commit currentHeadCommit,
+                                                   Commit targetBranchCommit) {
+        Set<String> allFiles = new HashSet<>();
+        allFiles.addAll(splitCommit.getTrackedFiles().keySet());
+        allFiles.addAll(currentHeadCommit.getTrackedFiles().keySet());
+        allFiles.addAll(targetBranchCommit.getTrackedFiles().keySet());
+        return allFiles;
     }
 
     private static void mkdirGitletFolder() {
