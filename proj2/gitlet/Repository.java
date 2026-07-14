@@ -295,10 +295,7 @@ public class Repository {
         // implement merge command
         Commit currentHeadCommit = Commit.getHeadCommit();
         File branchFile = join(Repository.HEAD_DIR, branchName);
-        String targetCommitSha1 = readContentsAsString(branchFile);
-        Commit targetBranchCommit = Commit.getCommitWithId(targetCommitSha1);
         StagingArea stagingArea = StagingArea.loadStagingArea();
-        List<String> untrackedFiles = getUntrackedFiles(false);
 
         // step 1: validate merge
         if (!stagingArea.isEmpty()) {
@@ -314,8 +311,14 @@ public class Repository {
             exitWithError("Cannot merge a branch with itself.");
         }
 
+        String targetCommitSha1 = readContentsAsString(branchFile);
+        Commit targetBranchCommit = Commit.getCommitWithId(targetCommitSha1);
+
+        List<String> untrackedFiles = getUntrackedFiles(false);
+
         // step 2: split point detected
-        String splitPointCommitSha1 = Commit.findSplitPointCommit(currentHeadCommit, targetBranchCommit);
+        String splitPointCommitSha1 = Commit.findSplitPointCommit(currentHeadCommit,
+                targetBranchCommit);
         Commit splitPointCommit = Commit.getCommitWithId(splitPointCommitSha1);
 
         if (Objects.equals(splitPointCommitSha1, targetCommitSha1)) {
