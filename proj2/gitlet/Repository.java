@@ -68,7 +68,7 @@ public class Repository {
         stagingArea.saveStagingArea();
     }
 
-    public static void commitCommand(String message) {
+    public static void commitCommand(String message, String secondParentId) {
         if (message == null || message.isBlank()) {
             Utils.exitWithError("Please enter a commit message.");
         }
@@ -84,6 +84,7 @@ public class Repository {
         headCommit.setMessage(message);
         headCommit.setTimeStamp(new Date());
         headCommit.setFirstParentId(oldSha1HeadCommit);
+        headCommit.setSecondParentId(secondParentId);
         headCommit.saveCommit();
 
         String newSha1HeadCommit = headCommit.getCommitSha1();
@@ -294,11 +295,10 @@ public class Repository {
         // implement merge command
         Commit currentHeadCommit = Commit.getHeadCommit();
         File branchFile = join(Repository.HEAD_DIR, branchName);
-        Commit targetBranchCommit = Commit.getCommitWithId(readContentsAsString(branchFile));
+        String targetCommitSha1 = readContentsAsString(branchFile);
+        Commit targetBranchCommit = Commit.getCommitWithId(targetCommitSha1);
         StagingArea stagingArea = StagingArea.loadStagingArea();
         List<String> untrackedFiles = getUntrackedFiles(false);
-        TreeMap<String, String> targetTrackedFiles = targetBranchCommit != null
-                ? targetBranchCommit.getTrackedFiles() : new TreeMap<>();
 
         // step 1: validate merge
         if (!stagingArea.isEmpty()) {
@@ -318,23 +318,96 @@ public class Repository {
         String splitPointCommitSha1 = Commit.findSplitPointCommit(currentHeadCommit, targetBranchCommit);
         Commit splitPointCommit = Commit.getCommitWithId(splitPointCommitSha1);
 
+        if (Objects.equals(splitPointCommitSha1, targetCommitSha1)) {
+            exitWithError("Given branch is an ancestor of the current branch.");
+        }
+
+        if (Objects.equals(splitPointCommitSha1, currentHeadCommit.getCommitSha1())) {
+            checkoutBranch(branchName);
+            exitWithError("Current branch fast-forwarded.");
+        }
+
         // step 3: condition merge
         Map<String, MergeAction> mergePlan = new HashMap<>();
-        Set<String> allFileCheckMerge = getAllFilesCheckMerge(splitPointCommit, currentHeadCommit, targetBranchCommit);
+        Set<String> allFileCheckMerge = getAllFilesCheckMerge(splitPointCommit,
+                currentHeadCommit, targetBranchCommit);
         for (String fileName: allFileCheckMerge) {
-            MergeAction action = mergeAction(fileName, splitPointCommit, currentHeadCommit, targetBranchCommit);
+            MergeAction action = mergeAction(fileName, splitPointCommit,
+                    currentHeadCommit, targetBranchCommit);
             mergePlan.put(fileName, action);
         }
 
         // Step 4:
         for (String fileName: untrackedFiles) {
-            exitWithError("There is an untracked file in the way; delete it, or add and commit it first.");
+            if (mergePlan.get(fileName) != null) {
+                if (mergePlan.get(fileName).equals(MergeAction.CONFLICT)
+                        || mergePlan.get(fileName).equals(MergeAction.OVERWRITE_FROM_TARGET)) {
+                    exitWithError("There is an untracked file in the way; "
+                            +
+                            "delete it, or add and commit it first.");
+                }
+            }
+
         }
         // step 5: create a merge commit and commit
         for (Map.Entry<String, MergeAction> entry : mergePlan.entrySet()) {
-
+            executeMerge(entry.getKey(), entry.getValue(),
+                    currentHeadCommit, targetBranchCommit);
         }
 
+        commitCommand("Merged " + branchName + " into "
+                + currentBranchName + ".", targetCommitSha1);
+
+        if (mergePlan.containsValue(MergeAction.CONFLICT)) {
+            System.out.println("Encountered a merge conflict.");
+        }
+    }
+
+    private static void executeMerge(String fileName, MergeAction action,
+                                     Commit currentHeadCommit, Commit targetBranchCommit) {
+        switch (action) {
+            case CONFLICT:
+                String conflictContent = makeConflictContent(fileName, currentHeadCommit,
+                        targetBranchCommit);
+                File file = join(CWD, fileName);
+                writeContents(file, conflictContent);
+                addCommand(fileName);
+                break;
+            case OVERWRITE_FROM_TARGET:
+                String targetFileSha1 = targetBranchCommit.getBlobSha1(fileName);
+                if (targetFileSha1 == null) {
+                    restrictedDelete(fileName);
+                    rmCommand(fileName);
+                } else {
+                    checkoutFileFromCommit(targetBranchCommit.getCommitSha1(), fileName);
+                    addCommand(fileName);
+                }
+                break;
+            case DO_NOTHING:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private static String makeConflictContent(String fileName, Commit currentHeadCommit,
+                                              Commit targetBranchCommit) {
+        String blobSha1CurrentBranchFile = currentHeadCommit.getBlobSha1(fileName);
+        String blobSha1TargetBranchFile = targetBranchCommit.getBlobSha1(fileName);
+
+        String headCommitContent = blobSha1CurrentBranchFile != null
+                ? Blob.readContentAsString(blobSha1CurrentBranchFile) : "";
+        String targetCommitContent = blobSha1TargetBranchFile != null
+                ? Blob.readContentAsString(blobSha1TargetBranchFile) : "";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("<<<<<<< HEAD\n");
+        sb.append(headCommitContent);
+        sb.append("=======\n");
+        sb.append(targetCommitContent);
+        sb.append(">>>>>>>\n");
+
+        return sb.toString();
     }
 
     private static MergeAction mergeAction(String fileName, Commit splitPoint,

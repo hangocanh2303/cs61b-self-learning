@@ -29,7 +29,7 @@ public class Main {
             case "commit":
                 validateNumArgs("commit", args, 2);
                 Repository.validateGitletFolder();
-                Repository.commitCommand(args[1]);
+                Repository.commitCommand(args[1], null);
                 break;
             case "checkout":
                 Repository.validateGitletFolder();

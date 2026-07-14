@@ -23,4 +23,9 @@ public class Blob {
         File blob = Utils.join(BLOB_FOLDER, blobSha1);
         return Utils.readContents(blob);
     }
+
+    public static String readContentAsString(String blobSha1) {
+        File blob = Utils.join(BLOB_FOLDER, blobSha1);
+        return Utils.readContentsAsString(blob);
+    }
 }

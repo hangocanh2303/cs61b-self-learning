@@ -48,10 +48,6 @@ public class Branch {
         writeContents(getCurrentBranch(), commitSha1);
     }
 
-
-
-
-
     /**
      * === Branches ===
      * *master
