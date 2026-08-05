@@ -49,7 +49,7 @@ public class HexWorld {
         ter.initialize(WIDTH, HEIGHT);
 
         HexWorld hexWorld = new HexWorld();
-        hexWorld.addHexagon(0, 0, 2, Tileset.GRASS);
+        hexWorld.addHexagon(0, 0, 4, Tileset.MOUNTAIN);
 
         ter.renderFrame(hexWorld.getTiles());
     }
