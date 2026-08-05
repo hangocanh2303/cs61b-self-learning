@@ -13,8 +13,8 @@ import java.util.Random;
  */
 public class HexWorld {
 
-    public static final int WIDTH = 60;
-    public static final int HEIGHT = 30;
+    public static final int WIDTH = 80;
+    public static final int HEIGHT = 60;
 
     private final TETile[][] tiles;
 
@@ -73,11 +73,20 @@ public class HexWorld {
     private void addExampleHexWorld(int hexSize) {
         int maxLen = hexSize + 2 * (hexSize - 1);
         int middle = (WIDTH - maxLen) / 2;
-        addHexagonCols(middle, 0, hexSize, 4);
 
+        int midColSize = 5;
+
+        int colRange = 2 * hexSize - 1;
         // add middle col
-        // add left col
-        // add right col
+        addHexagonCols(middle, 0, hexSize, midColSize);
+
+        for (int i = 1; i < 3; i += 1) {
+            // add left col
+            addHexagonCols(middle - (i * colRange), hexSize * i, hexSize, midColSize - i);
+            // add right col
+            addHexagonCols(middle + (i * colRange), hexSize * i, hexSize, midColSize - i);
+        }
+
     }
 
     public static void main(String[] args) {
@@ -85,7 +94,7 @@ public class HexWorld {
         ter.initialize(WIDTH, HEIGHT);
 
         HexWorld hexWorld = new HexWorld();
-        hexWorld.addExampleHexWorld(3);
+        hexWorld.addExampleHexWorld(4);
 //        int startX = 0;
 //        int startY = 0;
 //        for (int i = 0; i < 19; i += 1) {
