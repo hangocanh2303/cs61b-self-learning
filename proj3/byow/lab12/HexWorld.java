@@ -18,6 +18,10 @@ public class HexWorld {
 
     private final TETile[][] tiles;
 
+    private static final long SEED = 2873123;
+    private static final Random RANDOM = new Random(SEED);
+
+
     public HexWorld() {
         tiles = new TETile[WIDTH][HEIGHT];
         fillWithEmptyTiles();
@@ -44,13 +48,51 @@ public class HexWorld {
         return tiles;
     }
 
+
+    private static TETile randomTile() {
+        int tileNum = RANDOM.nextInt(5);
+        switch (tileNum) {
+            case 0: return Tileset.TREE;
+            case 1: return Tileset.FLOWER;
+            case 2: return Tileset.MOUNTAIN;
+            case 3: return Tileset.GRASS;
+            case 4: return Tileset.SAND;
+            default: return Tileset.NOTHING;
+        }
+    }
+
+    private void addHexagonCols(int postX, int postY, int size, int numCols) {
+       for (int i = 0; i < numCols; i += 1) {
+           addHexagon(postX, postY, size, randomTile());
+           postY += 2 * size;
+       }
+
+
+    }
+
+    private void addExampleHexWorld(int hexSize) {
+        int maxLen = hexSize + 2 * (hexSize - 1);
+        int middle = (WIDTH - maxLen) / 2;
+        addHexagonCols(middle, 0, hexSize, 4);
+
+        // add middle col
+        // add left col
+        // add right col
+    }
+
     public static void main(String[] args) {
         TERenderer ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
 
         HexWorld hexWorld = new HexWorld();
-        hexWorld.addHexagon(0, 0, 4, Tileset.MOUNTAIN);
-
+        hexWorld.addExampleHexWorld(3);
+//        int startX = 0;
+//        int startY = 0;
+//        for (int i = 0; i < 19; i += 1) {
+//            hexWorld.addHexagon(startX, startY, 3, randomTile());
+//            startX += 1;
+//            startY += 1;
+//        }
         ter.renderFrame(hexWorld.getTiles());
     }
 }
