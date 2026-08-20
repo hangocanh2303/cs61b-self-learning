@@ -3,10 +3,17 @@ package byow.Core;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
+
 public class Room implements WorldComponent{
-    private Position bottomLeft;
-    private int width;
-    private int height;
+    private final Position bottomLeft;
+    private final int width;
+    private final int height;
+
+    public Room(Position bottomLeft, int width, int height) {
+        this.bottomLeft = bottomLeft;
+        this.width = width;
+        this.height = height;
+    }
 
     public Position getCenter() {
         return new Position(bottomLeft.getX() + width / 2,
@@ -49,7 +56,9 @@ public class Room implements WorldComponent{
             for (int col = x; col < topX; col += 1) {
                 if (row == y || row == topY - 1
                 || col == x || col == topX - 1) {
-                    world[col][row] = Tileset.WALL;
+                    if (world[col][row].equals(Tileset.NOTHING)) {
+                        world[col][row] = Tileset.WALL;
+                    }
                 } else {
                     world[col][row] = Tileset.FLOOR;
                 }
