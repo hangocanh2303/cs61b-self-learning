@@ -46,7 +46,37 @@ public class Engine {
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
 
-        TETile[][] finalWorldFrame = null;
-        return finalWorldFrame;
+        if (input == null || input.isEmpty()) {
+            return null;
+        }
+
+        input = input.toLowerCase();
+
+        if (input.charAt(0) != 'n') {
+            return null;
+        }
+
+        int index = 1;
+
+        StringBuilder seedString = new StringBuilder();
+
+        while (index < input.length()
+                && Character.isDigit(input.charAt(index))) {
+            seedString.append(input.charAt(index));
+            index++;
+        }
+
+        if (seedString.length() == 0) {
+            return null;
+        }
+
+        if (index >= input.length() || input.charAt(index) != 's') {
+            return null;
+        }
+
+        long seed = Long.parseLong(seedString.toString());
+
+        MapGenerator mapGenerator = new MapGenerator(seed);
+        return mapGenerator.generate();
     }
 }

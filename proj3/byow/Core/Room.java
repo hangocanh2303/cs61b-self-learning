@@ -57,33 +57,11 @@ public class Room implements WorldComponent{
 
     @Override
     public void draw(TETile[][] world) {
-        int x = bottomLeft.getX();
-        int y = bottomLeft.getY();
-        int topY = y + height;
-        int topX = x + width;
-        for (int row = y; row < topY; row += 1) {
-            for (int col = x; col < topX; col += 1) {
-                boolean isBorder = (row == y || row == topY - 1 || col == x || col == topX - 1);
-                if (!isBorder) {
-                    // Vẽ FLOOR cho phần lõi - luôn ghi đè
-                    world[col][row] = Tileset.FLOOR;
-                }
-            }
-        }
-    }
-    
-    /** Vẽ tường xung quanh - chỉ gọi sau khi tất cả FLOOR đã được vẽ */
-    public void drawWalls(TETile[][] world) {
-        int x = bottomLeft.getX();
-        int y = bottomLeft.getY();
-        int topY = y + height;
-        int topX = x + width;
-        for (int row = y; row < topY; row += 1) {
-            for (int col = x; col < topX; col += 1) {
-                boolean isBorder = (row == y || row == topY - 1 || col == x || col == topX - 1);
-                if (isBorder && world[col][row].equals(Tileset.NOTHING)) {
-                    world[col][row] = Tileset.WALL;
-                }
+        int startX = bottomLeft.getX();
+        int startY = bottomLeft.getY();
+        for (int x = startX; x < startX + width; x += 1) {
+            for (int y = startY; y < startY + height; y += 1) {
+                world[x][y] = Tileset.FLOOR;
             }
         }
     }
