@@ -182,8 +182,4 @@ public class Engine {
         StdDraw.textRight(WIDTH - 2, HEIGHT + 1.5, "HP: " + state.getHealth() + "% | Score: " + state.getScore());
         StdDraw.line(0, HEIGHT + 0.5, WIDTH, HEIGHT + 0.5);
     }
-
-    public String getInputHistory() {
-        return inputHistory.toString(); // Trả về chuỗi String trơn chứa các phím gõ (e.g., "N999SDDD")
-    }
 }
