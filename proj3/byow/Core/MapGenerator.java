@@ -19,7 +19,9 @@ public class MapGenerator {
     private static final int MIN_ROOM_SIZE = 4;
     private static final int MAX_ROOM_SIZE = 10;
     private static final int MAX_ATTEMPTS = 1000;
-
+    private static final int DEMO_SEED = 124;
+    private static final double FLOWER_CHANCE = 0.0015;
+    private static final double GOLD_CHANCE = 0.0025;
 
     public MapGenerator(long seed) {
         this.world = new TETile[WIDTH][HEIGHT];
@@ -143,16 +145,13 @@ public class MapGenerator {
     }
 
     private void populateItems(TETile[][] world) {
-        double appleChance = 0.0015;
-        double goldChance = 0.0025;
-
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) {
                 if (world[x][y].equals(Tileset.FLOOR)) {
                     double roll = random.nextDouble();
-                    if (roll < appleChance) {
+                    if (roll < FLOWER_CHANCE) {
                         world[x][y] = Tileset.FLOWER;
-                    } else if (roll < appleChance + goldChance) {
+                    } else if (roll < FLOWER_CHANCE + GOLD_CHANCE) {
                         world[x][y] = Tileset.GOLD;
                     }
                 }
@@ -163,7 +162,7 @@ public class MapGenerator {
     public static void main(String[] args) {
         TERenderer ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
-        MapGenerator map = new MapGenerator(1234);
+        MapGenerator map = new MapGenerator(DEMO_SEED);
         TETile[][] tiles = map.generate();
         ter.renderFrame(tiles);
     }

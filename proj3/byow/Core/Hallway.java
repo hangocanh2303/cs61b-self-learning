@@ -5,7 +5,7 @@ import byow.TileEngine.TETile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Hallway implements WorldComponent{
+public class Hallway implements WorldComponent {
 
     private final List<Room> segments;
 

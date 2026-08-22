@@ -2,14 +2,15 @@ package byow.Core;
 
 import edu.princeton.cs.introcs.StdDraw;
 
-public class KeyboardSource implements InputSource{
+public class KeyboardSource implements InputSource {
+    private static final int PAUSE = 10;
     @Override
     public char getNextKey() {
         while (true) {
             if (StdDraw.hasNextKeyTyped()) {
                 return Character.toUpperCase(StdDraw.nextKeyTyped());
             }
-            StdDraw.pause(10);
+            StdDraw.pause(PAUSE);
         }
     }
 

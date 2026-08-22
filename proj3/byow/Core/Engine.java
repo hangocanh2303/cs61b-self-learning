@@ -3,7 +3,6 @@ package byow.Core;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
-import java.awt.Font;
 import edu.princeton.cs.introcs.StdDraw;
 
 public class Engine {
@@ -45,46 +44,12 @@ public class Engine {
      * @return the 2D TETile[][] representing the state of the world
      */
     public TETile[][] interactWithInputString(String input) {
-        // TODO: Fill out this method so that it run the engine using the input
         // passed in as an argument, and return a 2D tile representation of the
         // world that would have been drawn if the same inputs had been given
         // to interactWithKeyboard().
         //
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
-
-//        if (input == null || input.isEmpty()) {
-//            return null;
-//        }
-//
-//        input = input.toLowerCase();
-//
-//        if (input.charAt(0) != 'n') {
-//            return null;
-//        }
-//
-//        int index = 1;
-//
-//        StringBuilder seedString = new StringBuilder();
-//
-//        while (index < input.length()
-//                && Character.isDigit(input.charAt(index))) {
-//            seedString.append(input.charAt(index));
-//            index++;
-//        }
-//
-//        if (seedString.length() == 0) {
-//            return null;
-//        }
-//
-//        if (index >= input.length() || input.charAt(index) != 's') {
-//            return null;
-//        }
-//
-//        long seed = Long.parseLong(seedString.toString());
-//
-//        MapGenerator mapGenerator = new MapGenerator(seed);
-//        return mapGenerator.generate();
 
         InputSource source = new StringSource(input);
         GameState finalState = runGame(source, false);
@@ -96,50 +61,38 @@ public class Engine {
         boolean preparingQuit = false;
         boolean inMenu = true;
         StringBuilder seedBuilder = new StringBuilder();
-
-        // Vòng lặp chính chạy dựa trên possibleNextInput() - Không bao giờ sập luồng khi đứng im!
         while (source.possibleNextInput()) {
-
-            // Chỉ đọc và xử lý phím bấm khi thực sự có phím đang nằm đợi trong buffer (Không chặn!)
             if (source.hasNextKey()) {
                 char key = Character.toUpperCase(source.getNextKey());
-
-                // --- TRẠNG THÁI 1: KHỞI TẠO Ở MENU CHÍNH ---
                 if (inMenu) {
                     if (key == 'N') {
-                        seedBuilder.setLength(0); // Làm trống bộ đệm hạt giống
+                        seedBuilder.setLength(0);
                         if (render) {
-                            drawSeedMenu(""); // Vẽ màn hình yêu cầu nhập SEED lên GUI
+                            drawSeedMenu("");
                         }
                     } else if (Character.isDigit(key)) {
                         seedBuilder.append(key);
                         if (render) {
-                            drawSeedMenu(seedBuilder.toString()); // Hiển thị số đang nhập theo thời gian thực
+                            drawSeedMenu(seedBuilder.toString());
                         }
                     } else if (key == 'S' && seedBuilder.length() > 0) {
-                        // Chốt hạt giống thành công -> Kích hoạt sinh địa hình v12
                         long seed = Long.parseLong(seedBuilder.toString());
                         MapGenerator generator = new MapGenerator(seed);
                         TETile[][] world = generator.generate();
-
-                        // Tìm kiếm ô sàn trống đầu tiên để định vị Avatar một cách an toàn
                         Position startPos = findEmptyFloor(world);
                         world[startPos.getX()][startPos.getY()] = Tileset.AVATAR;
-
-                        // Đóng gói trạng thái thế giới
                         gameState = new GameState(world, startPos, new java.util.Random(seed));
-                        inMenu = false; // Thoát khỏi Menu, chuyển sang trạng thái di chuyển!
+                        inMenu = false;
                     } else if (key == 'L') {
-                        // Tải lại game cũ từ file savefile.txt
                         gameState = PersistenceUtils.loadGame();
                         if (gameState == null) {
                             if (render) {
-                                System.exit(0); // Nếu chơi GUI mà không có file, đóng chương trình an toàn [310]
+                                System.exit(0);
                             } else {
-                                return null;    // Chế độ chấm điểm trả về null phòng ngự [310]
+                                return null;
                             }
                         }
-                        inMenu = false; // Vào game trực tiếp bằng trạng thái đã khôi phục!
+                        inMenu = false;
                     } else if (key == 'Q') {
                         if (render) {
                             System.exit(0);
@@ -147,53 +100,40 @@ public class Engine {
                             return null;
                         }
                     }
-
-                    // --- TRẠNG THÁI 2: ĐANG TRONG TRẬN ĐẤU (GAMEPLAY STATE) ---
                 } else {
                     if (preparingQuit) {
                         if (key == 'Q') {
-                            PersistenceUtils.saveGame(gameState); // Ghi tuần tự đối tượng GameState [309, 310]
+                            PersistenceUtils.saveGame(gameState);
                             if (render) {
                                 System.exit(0);
                             } else {
-                                return gameState; // Chế độ String trả về trạng thái để autograder so khớp
+                                return gameState;
                             }
                         }
-                        preparingQuit = false; // Nhấn phím bất kỳ khác -> Hủy trạng thái chờ thoát [309]
+                        preparingQuit = false;
                     } else if (key == ':') {
-                        preparingQuit = true; // Bật cờ chờ nhấn phím Q kế tiếp để thoát [309]
+                        preparingQuit = true;
                     } else if (key == 'V') {
-                        gameState.toggleLOS(); // Bật/tắt Line of Sight (270 điểm Ambition) [315]
+                        gameState.toggleLOS();
                     } else {
-                        gameState.moveAvatar(key); // Di chuyển nhân vật phòng ngự (W, A, S, D) [307]
+                        gameState.moveAvatar(key);
                     }
                 }
             }
-
-            // --- TRẠNG THÁI 3: KẾT XUẤT ĐỒ HỌA HOVER CHUỘT (CHỈ CHẠY TRONG KEYBOARD MODE) ---
-            // Đặt ngoài khối hasNextKey() để di chuột luôn mượt mà khi đứng im di chuyển!
             if (render && !inMenu && gameState != null) {
-                // Đọc tọa độ pixel của chuột và dịch sang tọa độ ô gạch vật lý [326]
                 int mouseX = (int) StdDraw.mouseX();
                 int mouseY = (int) StdDraw.mouseY();
                 String hudMessage = "Void";
-
                 if (mouseX >= 0 && mouseX < WIDTH && mouseY >= 0 && mouseY < HEIGHT) {
                     hudMessage = gameState.getWorld()[mouseX][mouseY].description();
                 }
-
-                // Render mảng gạch đã được lọc qua bóng tối sương mù Line of Sight [315]
                 TETile[][] frameToRender = gameState.getRenderFrame();
                 ter.renderFrame(frameToRender);
-
-                // Vẽ đè thanh HUD chứa máu, điểm và mô tả hover gạch
                 drawHUD(hudMessage, gameState);
-
                 StdDraw.show();
-                StdDraw.pause(10); // Khống chế luồng tránh CPU chạy quá công suất
+                StdDraw.pause(10);
             }
         }
-
         return gameState;
     }
 
@@ -237,6 +177,6 @@ public class Engine {
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.textLeft(2, HEIGHT + 1.5, "Tile: " + hoverMessage);
         StdDraw.textRight(WIDTH - 2, HEIGHT + 1.5, "HP: " + state.getHealth() + "% | Score: " + state.getScore());
-        StdDraw.line(0, HEIGHT + 0.5, WIDTH, HEIGHT + 0.5); // Vẽ ranh giới phân tách HUD và bản đồ
+        StdDraw.line(0, HEIGHT + 0.5, WIDTH, HEIGHT + 0.5);
     }
 }

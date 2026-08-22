@@ -4,7 +4,7 @@ import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
 
-public class Room implements WorldComponent{
+public class Room implements WorldComponent {
     private final Position bottomLeft;
     private final int width;
     private final int height;
@@ -37,10 +37,10 @@ public class Room implements WorldComponent{
         int y2 = otherRoomBottomLeft.getY();
         int w2 = other.getWidth();
         int h2 = other.getHeight();
-        return (x1 < x2 + w2) &&
-                (x1 + width > x2) &&
-                (y1 < y2 + h2) &&
-                (y1 + height > y2);
+        return (x1 < x2 + w2)
+                && (x1 + width > x2)
+                && (y1 < y2 + h2)
+                && (y1 + height > y2);
     }
 
     public int getWidth() {

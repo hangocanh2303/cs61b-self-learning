@@ -61,10 +61,14 @@ public class GameState implements Serializable {
         char direction = Character.toUpperCase(key);
 
         switch (direction) {
-            case 'W': dy = 1; break;   // UP
-            case 'S': dy = -1; break;  // DOWN
-            case 'A': dx = -1; break;  // LEFT
-            case 'D': dx = 1; break;   // RIGHT
+            case 'W': dy = 1;
+                break;   // UP
+            case 'S': dy = -1;
+                break;  // DOWN
+            case 'A': dx = -1;
+                break;  // LEFT
+            case 'D': dx = 1;
+                break;   // RIGHT
             default:
         }
 
@@ -72,10 +76,10 @@ public class GameState implements Serializable {
         int targetY = avatarPos.getY() + dy;
 
         if (targetX >= 0 && targetX < Engine.WIDTH
-        && targetY >= 0 && targetY <= Engine.HEIGHT) {
+            && targetY >= 0 && targetY <= Engine.HEIGHT) {
             TETile targetTile = world[targetX][targetY];
             if (targetTile.equals(Tileset.FLOOR) || targetTile.equals(Tileset.FLOWER)
-            || targetTile.equals(Tileset.GOLD)) {
+                || targetTile.equals(Tileset.GOLD)) {
                 inputHistory.append(direction);
                 if (targetTile.equals(Tileset.FLOWER)) {
                     health = Math.min(100, health + 20);
@@ -105,7 +109,7 @@ public class GameState implements Serializable {
             for (int y = 0; y < Engine.HEIGHT; y += 1) {
                 if (Math.abs(x - playerX) < radius && Math.abs(y - playerY) < radius) {
                     frame[x][y] = world[x][y];
-                }else {
+                } else {
                     frame[x][y] = Tileset.NOTHING;
                 }
             }

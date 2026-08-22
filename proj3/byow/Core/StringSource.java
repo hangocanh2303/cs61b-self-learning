@@ -1,6 +1,6 @@
 package byow.Core;
 
-public class StringSource implements InputSource{
+public class StringSource implements InputSource {
 
     private final String input;
     private int index;
