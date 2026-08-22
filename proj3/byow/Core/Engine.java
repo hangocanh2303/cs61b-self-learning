@@ -57,7 +57,8 @@ public class Engine {
         return finalState != null ? finalState.getWorld() : null;
     }
 
-    private GameState runGame(InputSource source, boolean render) {
+    private GameState runGame(InputSource source,
+                              boolean render) {
         GameState gameState = null;
         boolean preparingQuit = false;
         boolean inMenu = true;
@@ -83,6 +84,7 @@ public class Engine {
                         Position startPos = findEmptyFloor(world);
                         world[startPos.getX()][startPos.getY()] = Tileset.AVATAR;
                         gameState = new GameState(world, startPos, new java.util.Random(seed));
+                        gameState.getInputHistory().append("N").append(seedBuilder.toString()).append("S");
                         inMenu = false;
                     } else if (key == 'L') {
                         String savedHistory = PersistenceUtils.loadHistory();
@@ -179,7 +181,8 @@ public class Engine {
     private void drawHUD(String hoverMessage, GameState state) {
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.textLeft(2, HEIGHT + 1.5, "Tile: " + hoverMessage);
-        StdDraw.textRight(WIDTH - 2, HEIGHT + 1.5, "HP: " + state.getHealth() + "% | Score: " + state.getScore());
+        StdDraw.textRight(WIDTH - 2, HEIGHT + 1.5, "HP: "
+                + state.getHealth() + "% | Score: " + state.getScore());
         StdDraw.line(0, HEIGHT + 0.5, WIDTH, HEIGHT + 0.5);
     }
 }
