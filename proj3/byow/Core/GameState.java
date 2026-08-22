@@ -43,6 +43,10 @@ public class GameState implements Serializable {
         return inputHistory;
     }
 
+    public String getInputHistoryString() {
+        return inputHistory.toString();
+    }
+
     public int getScore() {
         return score;
     }

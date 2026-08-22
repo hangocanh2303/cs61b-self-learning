@@ -44,12 +44,13 @@ public class Engine {
      * @return the 2D TETile[][] representing the state of the world
      */
     public TETile[][] interactWithInputString(String input) {
-        // passed in as an argument, and return a 2D tile representation of the
-        // world that would have been drawn if the same inputs had been given
-        // to interactWithKeyboard().
-        //
-        // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
-        // that works for many different input types.
+        if (input.toUpperCase().startsWith("L")) {
+            String savedHistory = PersistenceUtils.loadHistory();
+            if (savedHistory == null) {
+                return null;
+            }
+            input = savedHistory + input.substring(1);
+        }
 
         InputSource source = new StringSource(input);
         GameState finalState = runGame(source, false);
@@ -84,14 +85,16 @@ public class Engine {
                         gameState = new GameState(world, startPos, new java.util.Random(seed));
                         inMenu = false;
                     } else if (key == 'L') {
-                        gameState = PersistenceUtils.loadGame();
-                        if (gameState == null) {
+                        String savedHistory = PersistenceUtils.loadHistory();
+                        if (savedHistory == null) {
                             if (render) {
                                 System.exit(0);
                             } else {
                                 return null;
                             }
                         }
+                        InputSource replaySource = new StringSource(savedHistory);
+                        gameState = runGame(replaySource, false);
                         inMenu = false;
                     } else if (key == 'Q') {
                         if (render) {
@@ -103,7 +106,7 @@ public class Engine {
                 } else {
                     if (preparingQuit) {
                         if (key == 'Q') {
-                            PersistenceUtils.saveGame(gameState);
+                            PersistenceUtils.saveHistory(gameState.getInputHistoryString());
                             if (render) {
                                 System.exit(0);
                             } else {
@@ -178,5 +181,9 @@ public class Engine {
         StdDraw.textLeft(2, HEIGHT + 1.5, "Tile: " + hoverMessage);
         StdDraw.textRight(WIDTH - 2, HEIGHT + 1.5, "HP: " + state.getHealth() + "% | Score: " + state.getScore());
         StdDraw.line(0, HEIGHT + 0.5, WIDTH, HEIGHT + 0.5);
+    }
+
+    public String getInputHistory() {
+        return inputHistory.toString(); // Trả về chuỗi String trơn chứa các phím gõ (e.g., "N999SDDD")
     }
 }
