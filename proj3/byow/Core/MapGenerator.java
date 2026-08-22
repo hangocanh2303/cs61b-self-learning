@@ -144,15 +144,15 @@ public class MapGenerator {
         }
     }
 
-    private void populateItems(TETile[][] world) {
+    private void populateItems(TETile[][] tiles) {
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) {
-                if (world[x][y].equals(Tileset.FLOOR)) {
+                if (tiles[x][y].equals(Tileset.FLOOR)) {
                     double roll = random.nextDouble();
                     if (roll < FLOWER_CHANCE) {
-                        world[x][y] = Tileset.FLOWER;
+                        tiles[x][y] = Tileset.FLOWER;
                     } else if (roll < FLOWER_CHANCE + GOLD_CHANCE) {
-                        world[x][y] = Tileset.GOLD;
+                        tiles[x][y] = Tileset.GOLD;
                     }
                 }
             }

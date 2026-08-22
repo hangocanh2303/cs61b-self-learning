@@ -57,8 +57,7 @@ public class Engine {
         return finalState != null ? finalState.getWorld() : null;
     }
 
-    private GameState runGame(InputSource source,
-                              boolean render) {
+    private GameState runGame(InputSource source, boolean render) {
         GameState gameState = null;
         boolean preparingQuit = false;
         boolean inMenu = true;
@@ -84,7 +83,7 @@ public class Engine {
                         Position startPos = findEmptyFloor(world);
                         world[startPos.getX()][startPos.getY()] = Tileset.AVATAR;
                         gameState = new GameState(world, startPos, new java.util.Random(seed));
-                        gameState.getInputHistory().append("N").append(seedBuilder.toString()).append("S");
+                        gameState.getInputHistory().append("N").append(seedBuilder).append("S");
                         inMenu = false;
                     } else if (key == 'L') {
                         String savedHistory = PersistenceUtils.loadHistory();
@@ -126,20 +125,24 @@ public class Engine {
                 }
             }
             if (render && !inMenu && gameState != null) {
-                int mouseX = (int) StdDraw.mouseX();
-                int mouseY = (int) StdDraw.mouseY();
-                String hudMessage = "Void";
-                if (mouseX >= 0 && mouseX < WIDTH && mouseY >= 0 && mouseY < HEIGHT) {
-                    hudMessage = gameState.getWorld()[mouseX][mouseY].description();
-                }
-                TETile[][] frameToRender = gameState.getRenderFrame();
-                ter.renderFrame(frameToRender);
-                drawHUD(hudMessage, gameState);
-                StdDraw.show();
-                StdDraw.pause(10);
+                renderGameView(gameState);
             }
         }
         return gameState;
+    }
+
+    private void renderGameView(GameState gameState) {
+        int mouseX = (int) StdDraw.mouseX();
+        int mouseY = (int) StdDraw.mouseY();
+        String hudMessage = "Void";
+        if (mouseX >= 0 && mouseX < WIDTH && mouseY >= 0 && mouseY < HEIGHT) {
+            hudMessage = gameState.getWorld()[mouseX][mouseY].description();
+        }
+        TETile[][] frameToRender = gameState.getRenderFrame();
+        ter.renderFrame(frameToRender);
+        drawHUD(hudMessage, gameState);
+        StdDraw.show();
+        StdDraw.pause(10);
     }
 
     private Position findEmptyFloor(TETile[][] world) {
