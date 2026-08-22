@@ -1,6 +1,6 @@
 # BYOW Technical Design Document - Phase 2 (Unified Comprehensive Design Document)
 **Tác giả:** Anh Ha
-**Phiên bản:** v19 (Bản Thiết Kế Hoàn Chỉnh Đồng Nhất Tối Hậu - Sửa Lỗi Nghẽn Bàn Phím & HUD Không Chặn)
+**Phiên bản:** v21 (Bản Thiết Kế Đồng Bộ Với Source Code Thực Tế)
 **Khóa học:** CS 61B - UC Berkeley
 
 ---
@@ -17,13 +17,13 @@
                                       v
                      +──────────────────────────────────+
                      |           Core.Engine            | <─── (Điều phối chính, chứa runGame và drawMainMenu)
-                     +──────────────────────────────────+
+                     +──────────────────────────────────+      WIDTH=80, HEIGHT=30
                                       │
          ┌────────────────────────────┴────────────────────────────┐
          ▼ (Chế độ chơi Keyboard GUI)                              ▼ (Chế độ Autograder String)
   interactWithKeyboard()                                    interactWithInputString()
          │                                                         │
-         │ (vẽ drawMainMenu() trước,                               │ (không render)
+         │ (vẽ drawMainMenu() trước,                               │ (không render, xử lý Load prefix)
          │  sau đó khởi tạo KeyboardSource)                        │ (khởi tạo StringSource)
          v                                                         v
 +──────────────────+                                        +──────────────────+
@@ -45,11 +45,26 @@
                         ├─ Random rng  ├─ losEnabled  └─ StringBuilder inputHistory
 ```
 
+### Danh sách File trong Package `byow.Core`:
+| File | Mô tả |
+|------|-------|
+| `Engine.java` | Điều phối chính, xử lý menu và game loop |
+| `GameState.java` | Lưu trữ trạng thái game: world, avatar, score, health, inputHistory |
+| `MapGenerator.java` | Sinh bản đồ ngẫu nhiên với phòng và hành lang |
+| `Room.java` | Đại diện một phòng hình chữ nhật |
+| `Position.java` | Tọa độ (x, y) immutable |
+| `WorldComponent.java` | Interface cho các thành phần có thể vẽ |
+| `InputSource.java` | Interface đầu vào đa hình |
+| `KeyboardSource.java` | Đọc phím từ bàn phím (non-blocking) |
+| `StringSource.java` | Đọc từ chuỗi ký tự (cho autograder) |
+| `PersistenceUtils.java` | Lưu/đọc history ra file text |
+| `RandomUtils.java` | Tiện ích sinh số ngẫu nhiên |
+
 ### Các lớp Thực thể & Vai trò Kiến trúc:
 1.  **`Engine.java` (Orchestrator)**: Đóng vai trò là cổng giao tiếp ngoài cùng. Nó chịu trách nhiệm phân tích tham số dòng lệnh, điều hướng giữa chế độ GUI trực quan (`interactWithKeyboard`) và chế độ kiểm thử ngầm định (`interactWithInputString`) [292]. Toàn bộ logic chạy menu, khởi tạo thế giới, điều khiển di chuyển, lưu/tải game được gom gọn vào duy nhất một phương thức điều phối đa hình **`runGame`** nhằm đảm bảo tính đồng nhất 100% về hành vi giữa hai chế độ chơi [28.3].
 2.  **`GameState.java` (Core Model)**: Mô-đun sâu nhất (Deep Module) chịu trách nhiệm vận hành mọi quy tắc vật lý, cơ chế tương tác và các chỉ số sinh mệnh của trò chơi [28.3]. Lớp này đóng gói mảng gạch thế giới, tọa độ người chơi, trạng thái chỉ số (máu, điểm số), trạng thái bật/tắt sương mù Line of Sight, và bộ sinh số giả ngẫu nhiên `Random` [307, 312].
-3.  **`InputSource.java` (Abstraction Barrier)**: Interface trừu tượng hóa cách thức thu thập các lệnh bấm phím, giúp che giấu nguồn gốc dữ liệu (từ bàn phím vật lý rời rạc, từ chuỗi ký tự tĩnh của Gradescope, hoặc từ bộ sinh ngẫu nhiên tất định) [28.3, 326].
-4.  **`PersistenceUtils.java` (Persistence Layer)**: Module xử lý xuất/nhập tệp tin nhị phân phục vụ tính năng `:Q` (Lưu game) và `L` (Tải game) sử dụng công nghệ tuần tự hóa (Serialization) của Java [372, 388].
+3.  **`InputSource.java` (Abstraction Barrier)**: Interface trừu tượng hóa cách thức thu thập các lệnh bấm phím, giúp che giấu nguồn gốc dữ liệu (từ bàn phím vật lý rời rạc hoặc từ chuỗi ký tự tĩnh của Gradescope) [28.3, 326].
+4.  **`PersistenceUtils.java` (Persistence Layer)**: Module xử lý lưu/đọc chuỗi lịch sử input (history string) phục vụ tính năng `:Q` (Lưu game) và `L` (Tải game) [372, 388]. Sử dụng file text đơn giản thay vì serialization để đảm bảo tính tất định.
 
 ---
 
@@ -78,13 +93,15 @@ package byow.Core;
 import edu.princeton.cs.introcs.StdDraw;
 
 public class KeyboardSource implements InputSource {
+    private static final int PAUSE = 10;
+    
     @Override
     public char getNextKey() {
         while (true) {
             if (StdDraw.hasNextKeyTyped()) {
                 return Character.toUpperCase(StdDraw.nextKeyTyped());
             }
-            StdDraw.pause(10); // Giảm tải CPU khi chờ đợi phím
+            StdDraw.pause(PAUSE); // Giảm tải CPU khi chờ đợi phím
         }
     }
 
@@ -118,7 +135,7 @@ public class StringSource implements InputSource {
     @Override
     public char getNextKey() {
         char c = input.charAt(index);
-        index++;
+        index += 1;
         return c;
     }
 
@@ -134,44 +151,13 @@ public class StringSource implements InputSource {
 }
 ```
 
-### 2.3 Lớp `RandomInputSource` (Mô phỏng Fuzz Testing tự động)
-Dành cho việc chạy các bài kiểm thử tự động nhằm phát hiện lỗi tràn biên hoặc rò rỉ bộ nhớ một cách tất định dựa trên hạt giống (seed) cố định:
-
-```java
-package byow.Core;
-
-import java.util.Random;
-
-public class RandomInputSource implements InputSource {
-    private final Random rng;
-
-    public RandomInputSource(long seed) {
-        this.rng = new Random(seed);
-    }
-
-    @Override
-    public char getNextKey() {
-        char[] moves = {'W', 'A', 'S', 'D'};
-        return moves[rng.nextInt(moves.length)];
-    }
-
-    @Override
-    public boolean hasNextKey() {
-        return true; 
-    }
-
-    @Override
-    public boolean possibleNextInput() {
-        return true; // Luôn có dữ liệu di chuyển ngẫu nhiên tiếp theo
-    }
-}
-```
+**Lưu ý**: `RandomInputSource` có sẵn trong package `byow.InputDemo` nhưng không được sử dụng trong implementation Phase 2 hiện tại.
 
 ---
 
 ## 3. Lớp GameState & Cơ chế Va chạm Vật lý Phòng thủ
 
-Lớp `GameState` kế thừa `Serializable` để có thể đóng băng toàn bộ trạng thái vào ổ đĩa. Khi di chuyển Avatar, chúng ta áp dụng tư duy **Lập trình phòng thủ (Defensive Programming)** để ngăn chặn việc đi xuyên tường `Tileset.WALL` và thu thập các vật phẩm [28.1]:
+Lớp `GameState` kế thừa `Serializable` để có thể hỗ trợ tương lai. Khi di chuyển Avatar, chúng ta áp dụng tư duy **Lập trình phòng thủ (Defensive Programming)** để ngăn chặn việc đi xuyên tường `Tileset.WALL` và thu thập các vật phẩm [28.1]:
 
 ```java
 package byow.Core;
@@ -182,8 +168,6 @@ import java.io.Serializable;
 import java.util.Random;
 
 public class GameState implements Serializable {
-    private static final long serialVersionUID = 42L;
-
     private final TETile[][] world;
     private Position avatarPos;
     private final Random random;
@@ -201,13 +185,14 @@ public class GameState implements Serializable {
         this.inputHistory = new StringBuilder();
         this.score = 0;
         this.health = 100;
-        this.losEnabled = true; // Mặc định bật LOS tầm nhìn sương mù
+        this.losEnabled = false; // Mặc định tắt LOS để hiển thị toàn bộ bản đồ
     }
 
     public TETile[][] getWorld() { return world; }
     public Position getAvatarPos() { return avatarPos; }
     public Random getRandom() { return random; }
-    public String getInputHistory() { return inputHistory.toString(); }
+    public StringBuilder getInputHistory() { return inputHistory; }
+    public String getInputHistoryString() { return inputHistory.toString(); }
     public int getScore() { return score; }
     public int getHealth() { return health; }
     public boolean isLosEnabled() { return losEnabled; }
@@ -223,6 +208,8 @@ public class GameState implements Serializable {
     /**
      * Di chuyển nhân vật Avatar một cách phòng ngự.
      * Đảm bảo không ném ArrayIndexOutOfBoundsException và không đi qua tường.
+     * GHI CHÚ QUAN TRỌNG: Chỉ ghi nhận phím di chuyển hợp lệ vào inputHistory.
+     * Phần khởi tạo (N + seed + S) được ghi riêng trong Engine khi tạo GameState.
      */
     public void moveAvatar(char key) {
         int dx = 0;
@@ -234,26 +221,27 @@ public class GameState implements Serializable {
             case 'S': dy = -1; break;  // DOWN
             case 'A': dx = -1; break;  // LEFT
             case 'D': dx = 1; break;   // RIGHT
-            default: return; // Bỏ qua phím không hợp lệ
+            default: return; // Bỏ qua phím không hợp lệ - KHÔNG ghi vào history
         }
 
         int targetX = avatarPos.getX() + dx;
         int targetY = avatarPos.getY() + dy;
 
         // CHỐT CHẶN PHÒNG NGỰ: Kiểm tra ranh giới lưới mảng trước dựa trên kích thước của Engine
-        if (targetX >= 0 && targetX < Engine.WIDTH && targetY >= 0 && targetY < Engine.HEIGHT) {
+        if (targetX >= 0 && targetX < Engine.WIDTH && targetY >= 0 && targetY <= Engine.HEIGHT) {
             TETile targetTile = world[targetX][targetY];
 
-            // Chỉ cho phép đi vào ô FLOOR hoặc các thực thể tương tác (Vật phẩm táo, đồng vàng)
-            if (targetTile.equals(Tileset.FLOOR) || targetTile.character() == '🍎' || targetTile.character() == '$') {
+            // Chỉ cho phép đi vào ô FLOOR hoặc các thực thể tương tác (FLOWER, GOLD)
+            if (targetTile.equals(Tileset.FLOOR) || targetTile.equals(Tileset.FLOWER) 
+                    || targetTile.equals(Tileset.GOLD)) {
                 
                 // Ghi nhận lịch sử di chuyển phục vụ Replay hoặc lưu trữ
                 inputHistory.append(direction);
 
                 // Xử lý ăn vật phẩm (Secondary Ambition Feature)
-                if (targetTile.character() == '🍎') {
-                    health = Math.min(100, health + 20); // Ăn táo hồi máu
-                } else if (targetTile.character() == '$') {
+                if (targetTile.equals(Tileset.FLOWER)) {
+                    health = Math.min(100, health + 20); // Ăn hoa hồi máu
+                } else if (targetTile.equals(Tileset.GOLD)) {
                     score += 100; // Nhặt vàng tăng điểm
                 }
 
@@ -275,12 +263,14 @@ public class GameState implements Serializable {
         }
 
         TETile[][] frame = new TETile[Engine.WIDTH][Engine.HEIGHT];
+        int playerX = avatarPos.getX();
+        int playerY = avatarPos.getY();
         int radius = 5; // Bán kính tầm nhìn sương mù hình vuông bọc quanh Avatar [315]
 
-        for (int x = 0; x < Engine.WIDTH; x++) {
-            for (int y = 0; y < Engine.HEIGHT; y++) {
-                // Toán học khoảng cách Chebyshev rời rạc [315]
-                if (Math.abs(x - avatarPos.getX()) <= radius && Math.abs(y - avatarPos.getY()) <= radius) {
+        for (int x = 0; x < Engine.WIDTH; x += 1) {
+            for (int y = 0; y < Engine.HEIGHT; y += 1) {
+                // Toán học khoảng cách Chebyshev rời rạc (dùng < thay vì <=)
+                if (Math.abs(x - playerX) < radius && Math.abs(y - playerY) < radius) {
                     frame[x][y] = world[x][y]; // Trong tầm nhìn -> Vẽ bình thường
                 } else {
                     frame[x][y] = Tileset.NOTHING; // Ngoài tầm nhìn -> Bọc bóng tối sương mù
@@ -296,7 +286,12 @@ public class GameState implements Serializable {
 
 ## 4. Hiện thực hóa Lớp Điều phối Engine.java - Máy Trạng Thái Đồng Nhất (Unified State Machine Loop)
 
-Để giải quyết triệt để lỗi DRY và Temporal Decomposition, đồng thời bảo đảm **vòng lặp không bị kết thúc sớm khi đứng im**, `Engine.java` điều phối máy trạng thái dựa trên dòng `possibleNextInput()` và chỉ xử lý phím bấm khi `hasNextKey()` có dữ liệu lấp đầy [421, 422]:
+Để giải quyết triệt để lỗi DRY và Temporal Decomposition, đồng thời bảo đảm **vòng lặp không bị kết thúc sớm khi đứng im**, `Engine.java` điều phối máy trạng thái dựa trên dòng `possibleNextInput()` và chỉ xử lý phím bấm khi `hasNextKey()` có dữ liệu lấp đầy [421, 422].
+
+**QUAN TRỌNG - Cơ chế Save/Load cho Autograder:**
+- Khi tạo thế giới mới, phải ghi **toàn bộ chuỗi khởi tạo** (`N` + seed + `S`) vào `inputHistory` ngay lập tức.
+- Khi xử lý `interactWithInputString("L...")`, ghép history đã lưu với phần còn lại của input rồi replay từ đầu.
+- Điều này đảm bảo `interactWithInputString("n123sss:q")` + `interactWithInputString("lww")` = `interactWithInputString("n123sssww")`.
 
 ```java
 package byow.Core;
@@ -307,9 +302,9 @@ import byow.TileEngine.Tileset;
 import edu.princeton.cs.introcs.StdDraw;
 
 public class Engine {
-    private final TERenderer ter = new TERenderer();
+    TERenderer ter = new TERenderer();
     public static final int WIDTH = 80;
-    public static final int HEIGHT = 45;
+    public static final int HEIGHT = 30;
 
     /**
      * Chế độ chơi trực tiếp bằng bàn phím trên giao diện đồ họa.
@@ -328,8 +323,20 @@ public class Engine {
     /**
      * Chế độ chấm điểm ngầm định bằng chuỗi lệnh tĩnh của Gradescope.
      * Tuyệt đối KHÔNG gọi bất kỳ thư viện StdDraw hay render đồ họa nào tại đây.
+     * 
+     * QUAN TRỌNG: Nếu input bắt đầu bằng 'L', ghép savedHistory với phần còn lại
+     * rồi replay từ đầu để đảm bảo tính tất định.
      */
     public TETile[][] interactWithInputString(String input) {
+        if (input.toUpperCase().startsWith("L")) {
+            String savedHistory = PersistenceUtils.loadHistory();
+            if (savedHistory == null) {
+                return null;
+            }
+            // Ghép history đã lưu + phần input sau 'L' để replay toàn bộ
+            input = savedHistory + input.substring(1);
+        }
+        
         InputSource source = new StringSource(input);
         GameState finalState = runGame(source, false);
         return finalState != null ? finalState.getWorld() : null;
@@ -369,7 +376,7 @@ public class Engine {
                             drawSeedMenu(seedBuilder.toString()); // Hiển thị số đang nhập theo thời gian thực
                         }
                     } else if (key == 'S' && seedBuilder.length() > 0) {
-                        // Chốt hạt giống thành công -> Kích hoạt sinh địa hình v12
+                        // Chốt hạt giống thành công -> Kích hoạt sinh địa hình
                         long seed = Long.parseLong(seedBuilder.toString());
                         MapGenerator generator = new MapGenerator(seed);
                         TETile[][] world = generator.generate();
@@ -380,17 +387,24 @@ public class Engine {
 
                         // Đóng gói trạng thái thế giới
                         gameState = new GameState(world, startPos, new java.util.Random(seed));
+                        
+                        // QUAN TRỌNG: Ghi toàn bộ lệnh khởi tạo vào inputHistory để save/load hoạt động đúng
+                        gameState.getInputHistory().append("N").append(seedBuilder).append("S");
+                        
                         inMenu = false; // Thoát khỏi Menu, chuyển sang trạng thái di chuyển!
                     } else if (key == 'L') {
                         // Tải lại game cũ từ file savefile.txt
-                        gameState = PersistenceUtils.loadGame();
-                        if (gameState == null) {
+                        String savedHistory = PersistenceUtils.loadHistory();
+                        if (savedHistory == null) {
                             if (render) {
                                 System.exit(0); // Nếu chơi GUI mà không có file, đóng chương trình an toàn [310]
                             } else {
                                 return null;    // Chế độ chấm điểm trả về null phòng ngự [310]
                             }
                         }
+                        // Replay toàn bộ history đã lưu để khôi phục trạng thái
+                        InputSource replaySource = new StringSource(savedHistory);
+                        gameState = runGame(replaySource, false);
                         inMenu = false; // Vào game trực tiếp bằng trạng thái đã khôi phục!
                     } else if (key == 'Q') {
                         if (render) {
@@ -404,7 +418,8 @@ public class Engine {
                 } else {
                     if (preparingQuit) {
                         if (key == 'Q') {
-                            PersistenceUtils.saveGame(gameState); // Ghi tuần tự đối tượng GameState [309, 310]
+                            // Lưu toàn bộ inputHistory (bao gồm N+seed+S và các bước di chuyển)
+                            PersistenceUtils.saveHistory(gameState.getInputHistoryString());
                             if (render) {
                                 System.exit(0);
                             } else {
@@ -425,28 +440,32 @@ public class Engine {
             // --- TRẠNG THÁI 3: KẾT XUẤT ĐỒ HỌA HOVER CHUỘT (CHỈ CHẠY TRONG KEYBOARD MODE) ---
             // Đặt ngoài khối hasNextKey() để di chuột luôn mượt mà khi đứng im di chuyển!
             if (render && !inMenu && gameState != null) {
-                // Đọc tọa độ pixel của chuột và dịch sang tọa độ ô gạch vật lý [326]
-                int mouseX = (int) StdDraw.mouseX();
-                int mouseY = (int) StdDraw.mouseY();
-                String hudMessage = "Void";
-
-                if (mouseX >= 0 && mouseX < WIDTH && mouseY >= 0 && mouseY < HEIGHT) {
-                    hudMessage = gameState.getWorld()[mouseX][mouseY].description();
-                }
-
-                // Render mảng gạch đã được lọc qua bóng tối sương mù Line of Sight [315]
-                TETile[][] frameToRender = gameState.getRenderFrame();
-                ter.renderFrame(frameToRender);
-                
-                // Vẽ đè thanh HUD chứa máu, điểm và mô tả hover gạch
-                drawHUD(hudMessage, gameState);
-                
-                StdDraw.show();
-                StdDraw.pause(10); // Khống chế luồng tránh CPU chạy quá công suất
+                renderGameView(gameState);
             }
         }
 
         return gameState;
+    }
+    
+    private void renderGameView(GameState gameState) {
+        // Đọc tọa độ pixel của chuột và dịch sang tọa độ ô gạch vật lý [326]
+        int mouseX = (int) StdDraw.mouseX();
+        int mouseY = (int) StdDraw.mouseY();
+        String hudMessage = "Void";
+
+        if (mouseX >= 0 && mouseX < WIDTH && mouseY >= 0 && mouseY < HEIGHT) {
+            hudMessage = gameState.getWorld()[mouseX][mouseY].description();
+        }
+
+        // Render mảng gạch đã được lọc qua bóng tối sương mù Line of Sight [315]
+        TETile[][] frameToRender = gameState.getRenderFrame();
+        ter.renderFrame(frameToRender);
+        
+        // Vẽ đè thanh HUD chứa máu, điểm và mô tả hover gạch
+        drawHUD(hudMessage, gameState);
+        
+        StdDraw.show();
+        StdDraw.pause(10); // Khống chế luồng tránh CPU chạy quá công suất
     }
 
     private Position findEmptyFloor(TETile[][] world) {
@@ -496,96 +515,186 @@ public class Engine {
 
 ---
 
-## 5. Cơ chế Lưu & Tải game Deterministic (RNG State Persistence)
+## 5. Cơ chế Lưu & Tải game Deterministic (History-based Persistence)
 
-Đặc tả yêu cầu trò chơi phải khôi phục lại thế giới giống hệt thời điểm trước khi thoát, bao gồm cả trạng thái của bộ sinh số ngẫu nhiên `Random` [310].
+Đặc tả yêu cầu trò chơi phải khôi phục lại thế giới giống hệt thời điểm trước khi thoát [310]. Thay vì serialize toàn bộ đối tượng `GameState`, chúng ta sử dụng phương pháp **lưu chuỗi lịch sử input (History String)** đơn giản và hiệu quả hơn.
 
-Do lớp `Random` trong thư viện chuẩn Java đã kế thừa interface `Serializable`, khi chúng ta serialize toàn bộ đối tượng `GameState` chứa trường `private final Random random`, **toàn bộ trạng thái hạt giống nội bộ (internal RNG seed state) của bộ phát sinh ngẫu nhiên sẽ được đóng băng nguyên vẹn** [310]. Khi tải lại, các phép gọi số ngẫu nhiên tiếp theo (nếu có sinh vật phẩm ngẫu nhiên động) sẽ tiếp tục sinh ra chính xác chuỗi giả ngẫu nhiên tiếp theo, bảo chứng tính tất định đạt điểm tuyệt đối autograder [310, 324]!
+**Nguyên lý hoạt động:**
+1. Khi tạo game mới: Ghi `"N" + seed + "S"` vào `inputHistory`
+2. Khi di chuyển: Ghi thêm các phím W/A/S/D vào `inputHistory`
+3. Khi save (`:Q`): Lưu toàn bộ `inputHistory` ra file text
+4. Khi load (`L`): Đọc `inputHistory` từ file, ghép với phần input mới, replay từ đầu
+
+Cách này đảm bảo **tính tất định tuyệt đối** vì cùng một chuỗi input sẽ luôn tạo ra cùng một trạng thái thế giới.
+
 ```java
 package byow.Core;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 
 public class PersistenceUtils {
     // Đảm bảo đường dẫn tệp tin an toàn trên mọi hệ điều hành (OS-agnostic file join) [321, 322]
     private static final File SAVE_FILE = Paths.get("savefile.txt").toFile();
 
-    public static void saveGame(GameState state) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_FILE))) {
-            oos.writeObject(state);
+    /**
+     * Lưu chuỗi lịch sử input ra file.
+     * Chuỗi này bao gồm cả phần khởi tạo (N+seed+S) và các bước di chuyển (W/A/S/D).
+     */
+    public static void saveHistory(String history) {
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(
+                new FileOutputStream(SAVE_FILE), StandardCharsets.UTF_8))) {
+            out.print(history);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static GameState loadGame() {
+    /**
+     * Đọc chuỗi lịch sử input từ file.
+     * Trả về null nếu file không tồn tại để Engine xử lý thoát an toàn [310].
+     */
+    public static String loadHistory() {
         if (!SAVE_FILE.exists()) {
-            return null; // Nếu chưa có file save, trả về null để Engine xử lý thoát an toàn [310]
+            return null;
         }
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {
-            return (GameState) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(SAVE_FILE), StandardCharsets.UTF_8))) {
+            return reader.readLine();
+        } catch (IOException e) {
             return null;
         }
     }
 }
 ```
 
+**Ví dụ minh họa:**
+- `interactWithInputString("n123sss:q")`:
+  - Tạo world với seed 123 → `inputHistory = "N123S"`
+  - Di chuyển S 3 lần → `inputHistory = "N123SSSS"` 
+  - Save → lưu `"N123SSSS"` vào file
+  
+- `interactWithInputString("lww")`:
+  - Load → đọc `"N123SSSS"` từ file
+  - Ghép với `"ww"` → `"N123SSSSww"`
+  - Replay toàn bộ → kết quả giống `interactWithInputString("n123sssww")`
+
 ---
 
-## 6. Hiện thực hóa trọn vẹn 360 điểm Ambition (Primary + Secondary Features)
+## 6. Thuật toán Sinh Bản đồ (MapGenerator) 
 
-Để giúp trò giành trọn vẹn **360 điểm tối đa của danh mục Ambition Score** một cách an toàn và nhẹ nhàng nhất, chúng ta kết hợp hai tính năng bổ trợ nhau [313]:
+Lớp `MapGenerator` sử dụng thuật toán sinh phòng ngẫu nhiên và kết nối bằng hành lang L-shape đơn giản. Đây là implementation gọn nhẹ đáp ứng yêu cầu Phase 1 của dự án.
 
-### 6.1 Line of Sight (270 Điểm - Tính năng chính)
-Sử dụng toán học Chebyshev rời rạc để lọc và vẽ một vùng không gian chiếu sáng hình vuông bán kính bằng `5` ô gạch bọc xung quanh người chơi. Toàn bộ ô gạch nằm ngoài khoảng này sẽ hiển thị là `Tileset.NOTHING` [315]. Toàn bộ logic này được đóng gói gọn gàng bên trong `GameState.getRenderFrame()` đã trình bày tại Mục 3 [315].
-
-### 6.2 Vật phẩm tương tác & Cơ chế Máu (90 Điểm - Tính năng phụ)
-*   **Vật phẩm Táo (`🍎`)**: Hồi phục máu cho người chơi (+20 HP, tối đa 100 HP) [307].
-*   **Vật phẩm Vàng (`$`)**: Tăng điểm số (+100 điểm) [307].
-*   Cơ chế được tích hợp trực tiếp vào logic di chuyển phòng ngự của `moveAvatar` tại Mục 3 [307]. Các vật phẩm này được rải ngẫu nhiên trên các ô sàn trống `Tileset.FLOOR` sau khi sinh bản đồ thành công thông qua lớp `MapGenerator.java` [291]:
+### 6.1 Cấu trúc và Hằng số
 
 ```java
 package byow.Core;
 
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
 
 public class MapGenerator {
+    public static final int WIDTH = Engine.WIDTH;   // 80
+    public static final int HEIGHT = Engine.HEIGHT; // 30 - đồng bộ với Engine
+    
+    private final TETile[][] world;
     private final Random random;
 
+    // Tham số cấu hình sinh bản đồ
+    private static final int MAX_ROOMS = 50;
+    private static final int MIN_ROOM_SIZE = 4;
+    private static final int MAX_ROOM_SIZE = 10;
+    private static final int MAX_ATTEMPTS = 1000;
+    private static final double FLOWER_CHANCE = 0.0015;  // 0.15% cơ hội sinh hoa
+    private static final double GOLD_CHANCE = 0.0025;    // 0.25% cơ hội sinh vàng
+
     public MapGenerator(long seed) {
+        this.world = new TETile[WIDTH][HEIGHT];
         this.random = new Random(seed);
+        initializeWorld();  // Điền NOTHING vào toàn bộ ô
     }
+}
+```
 
-    public TETile[][] generate() {
-        TETile[][] world = new TETile[Engine.WIDTH][Engine.HEIGHT];
-        
-        // 1. Thuật toán Phase 1: Tạo phòng ngẫu nhiên và hành lang...
-        // generateBasicTerrain(world);
+### 6.2 Quy trình sinh bản đồ
 
-        // 2. Rải vật phẩm lên sàn trống một cách tất định
-        populateItems(world);
+```
+generate()
+    │
+    ├─► generateRooms()      // Bước 1: Tạo các phòng ngẫu nhiên không chồng lấn
+    │       │
+    │       └─► Room.draw()  // Vẽ FLOOR vào vùng phòng
+    │
+    ├─► connectRooms()       // Bước 2: Kết nối phòng bằng hành lang L-shape
+    │       │
+    │       ├─► Sắp xếp theo tọa độ X của tâm phòng
+    │       │
+    │       └─► drawLHallway(p1, p2)  // Vẽ hành lang ngang rồi dọc
+    │
+    ├─► generateWalls()      // Bước 3: Tạo tường bao quanh FLOOR
+    │
+    └─► populateItems()      // Bước 4: Rải vật phẩm (FLOWER, GOLD)
+```
 
-        return world;
+### 6.3 Thuật toán chi tiết
+
+**Sinh phòng (generateRooms):**
+1. Random số phòng mục tiêu từ 10 đến MAX_ROOMS
+2. Lặp tối đa MAX_ATTEMPTS lần:
+   - Random kích thước phòng (MIN_ROOM_SIZE đến MAX_ROOM_SIZE)
+   - Random vị trí bottomLeft (đảm bảo không chạm biên)
+   - Kiểm tra overlap với các phòng đã tạo
+   - Nếu không overlap → thêm phòng và vẽ FLOOR
+
+**Kết nối phòng (connectRooms):**
+1. Sắp xếp danh sách phòng theo tọa độ X tâm tăng dần
+2. Với mỗi cặp phòng liền kề (i, i+1):
+   - Lấy tâm p1, p2
+   - Vẽ hành lang ngang từ x1 đến x2 tại y1
+   - Vẽ hành lang dọc từ y1 đến y2 tại x2
+
+**Sinh tường (generateWalls):**
+- Duyệt từng ô NOTHING
+- Nếu có ít nhất 1 ô FLOOR kề cạnh (8 hướng) → chuyển thành WALL
+
+### 6.4 Lớp hỗ trợ Room và WorldComponent
+
+```java
+// Interface cho các thành phần có thể vẽ
+public interface WorldComponent {
+    void draw(TETile[][] world);
+}
+
+// Lớp Room đại diện một phòng hình chữ nhật
+public class Room implements WorldComponent {
+    private final Position bottomLeft;
+    private final int width;
+    private final int height;
+
+    public Room(Position bottomLeft, int width, int height) { ... }
+    
+    public Position getCenter() {
+        return new Position(bottomLeft.getX() + width / 2,
+                            bottomLeft.getY() + height / 2);
     }
-
-    private void populateItems(TETile[][] world) {
-        double appleChance = 0.015; // 1.5% cơ hội sinh quả táo tại mỗi ô FLOOR
-        double goldChance = 0.025;  // 2.5% cơ hội sinh đồng vàng tại mỗi ô FLOOR
-
-        for (int x = 0; x < Engine.WIDTH; x++) {
-            for (int y = 0; y < Engine.HEIGHT; y++) {
-                if (world[x][y].equals(Tileset.FLOOR)) {
-                    double roll = random.nextDouble(); // RNG tất định từ seed
-                    if (roll < appleChance) {
-                        world[x][y] = Tileset.APPLE; // '🍎'
-                    } else if (roll < appleChance + goldChance) {
-                        world[x][y] = Tileset.GOLD;  // '$'
-                    }
-                }
+    
+    public boolean overlaps(Room other) {
+        // Kiểm tra giao nhau của 2 hình chữ nhật
+        return (x1 < x2 + w2) && (x1 + w1 > x2) 
+            && (y1 < y2 + h2) && (y1 + h1 > y2);
+    }
+    
+    @Override
+    public void draw(TETile[][] world) {
+        // Vẽ FLOOR cho toàn bộ vùng phòng
+        for (int x = startX; x < startX + width; x++) {
+            for (int y = startY; y < startY + height; y++) {
+                world[x][y] = Tileset.FLOOR;
             }
         }
     }
@@ -594,19 +703,58 @@ public class MapGenerator {
 
 ---
 
-## 7. Phân tích Hiệu năng & Ranh giới Phức tạp (Complexity Bounds)
+## 7. Tính năng Ambition (Primary + Secondary Features)
 
-### 7.1 Độ phức tạp thời gian (Time Complexity)
-*   **Xử lý phím bấm & di chuyển Avatar**: Chỉ là phép tịnh tiến và gán trị tọa độ trực tiếp, đạt độ phức tạp tối ưu **$\Theta(1)$** [174].
-*   **Tính toán tầm nhìn sương mù (Line of Sight)**: Duyệt mảng tĩnh 2D một lượt mỗi khung hình. Độ phức tạp là **$\Theta(	ext{WIDTH} \cdot 	ext{HEIGHT})$**. Với mảng kích thước cố định $80 	imes 45 = 3600$ phép tính, thao tác này chạy tốn chưa tới $0.5	ext{ms}$ [174].
-*   **Tuần tự hóa lưu/tải game**: Đạt độ phức tạp tuyến tính **$O(	ext{WIDTH} \cdot 	ext{HEIGHT})$** phù hợp hoàn hảo với yêu cầu chạy thời gian thực [372].
+Để giúp trò giành điểm tối đa của danh mục Ambition Score, chúng ta triển khai các tính năng bổ trợ nhau [313]:
 
-### 7.2 Độ phức tạp không gian (Space Complexity)
-Toàn bộ cấu trúc game chỉ tốn một mảng lưới 2D tĩnh và một chuỗi String ghi nhận lịch sử chuyển động. Đạt độ phức tạp không gian tối ưu **$O(	ext{WIDTH} \cdot 	ext{HEIGHT} + K)$** với $K$ là số lượng phím di chuyển, bảo chứng bộ nhớ luôn rảnh rang và tuyệt đối không bao giờ làm tràn bộ nhớ Stack của JVM [v10].
+### 7.1 Line of Sight (Tính năng chính)
+Sử dụng toán học Chebyshev rời rạc để lọc và vẽ một vùng không gian chiếu sáng hình vuông bán kính bằng `5` ô gạch bọc xung quanh người chơi. Toàn bộ ô gạch nằm ngoài khoảng này sẽ hiển thị là `Tileset.NOTHING` [315]. Toàn bộ logic này được đóng gói gọn gàng bên trong `GameState.getRenderFrame()` đã trình bày tại Mục 3 [315].
+
+- **Bật/Tắt**: Phím `V` để toggle
+- **Trạng thái mặc định**: Tắt (hiển thị toàn bộ bản đồ)
+
+### 7.2 Vật phẩm tương tác & Cơ chế Máu (Tính năng phụ)
+*   **Vật phẩm Hoa (`FLOWER`)**: Hồi phục máu cho người chơi (+20 HP, tối đa 100 HP) [307].
+*   **Vật phẩm Vàng (`GOLD`)**: Tăng điểm số (+100 điểm) [307].
+*   Cơ chế được tích hợp trực tiếp vào logic di chuyển phòng ngự của `moveAvatar` tại Mục 3 [307].
+
+**Tham số phân bố vật phẩm (trong MapGenerator):**
+```java
+private static final double FLOWER_CHANCE = 0.0015;  // 0.15% mỗi ô FLOOR
+private static final double GOLD_CHANCE = 0.0025;    // 0.25% mỗi ô FLOOR
+```
+
+### 7.3 HUD (Heads-Up Display)
+Thanh thông tin phía trên màn hình hiển thị:
+- **Tile description**: Mô tả ô gạch đang hover chuột
+- **HP**: Máu hiện tại (%)
+- **Score**: Điểm số tích lũy
+
+```java
+private void drawHUD(String hoverMessage, GameState state) {
+    StdDraw.setPenColor(StdDraw.WHITE);
+    StdDraw.textLeft(2, HEIGHT + 1.5, "Tile: " + hoverMessage);
+    StdDraw.textRight(WIDTH - 2, HEIGHT + 1.5, 
+        "HP: " + state.getHealth() + "% | Score: " + state.getScore());
+    StdDraw.line(0, HEIGHT + 0.5, WIDTH, HEIGHT + 0.5);
+}
+```
 
 ---
 
-## 8. Chiến lược Kiểm thử Tích hợp (Gradescope Integration Testing)
+## 8. Phân tích Hiệu năng & Ranh giới Phức tạp (Complexity Bounds)
+
+### 8.1 Độ phức tạp thời gian (Time Complexity)
+*   **Xử lý phím bấm & di chuyển Avatar**: Chỉ là phép tịnh tiến và gán trị tọa độ trực tiếp, đạt độ phức tạp tối ưu **Θ(1)** [174].
+*   **Tính toán tầm nhìn sương mù (Line of Sight)**: Duyệt mảng tĩnh 2D một lượt mỗi khung hình. Độ phức tạp là **Θ(WIDTH × HEIGHT)** [174].
+*   **Lưu/tải game**: Đạt độ phức tạp tuyến tính **O(K)** với K là độ dài chuỗi inputHistory [372].
+
+### 8.2 Độ phức tạp không gian (Space Complexity)
+Toàn bộ cấu trúc game chỉ tốn một mảng lưới 2D tĩnh và một chuỗi String ghi nhận lịch sử chuyển động. Đạt độ phức tạp không gian tối ưu **O(WIDTH × HEIGHT + K)** với K là số lượng phím di chuyển.
+
+---
+
+## 9. Chiến lược Kiểm thử Tích hợp (Gradescope Integration Testing)
 
 Để tự tin kiểm chứng tính tất định (Determinism) của `Engine` trước khi nộp bài lên Gradescope, em sử dụng JUnit 4 để chạy thử nghiệm các Replay chuỗi phím có lưu/tải trạng thái động [374, 395].
 

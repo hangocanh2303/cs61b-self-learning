@@ -10,8 +10,8 @@ import java.util.Random;
 
 public class MapGenerator {
 
-    public static final int WIDTH = 80;
-    public static final int HEIGHT = 45;
+    public static final int WIDTH = Engine.WIDTH;
+    public static final int HEIGHT = Engine.HEIGHT;
     private final TETile[][] world;
     private final Random random;
 
