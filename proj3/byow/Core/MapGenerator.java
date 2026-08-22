@@ -46,6 +46,8 @@ public class MapGenerator {
         // step 3: create wall
         generateWalls();
 
+        populateItems(world);
+
         return world;
     }
 
@@ -134,6 +136,24 @@ public class MapGenerator {
                     }
                     if (hasFloorNeighbor) {
                         world[x][y] = Tileset.WALL;
+                    }
+                }
+            }
+        }
+    }
+
+    private void populateItems(TETile[][] world) {
+        double appleChance = 0.0015;
+        double goldChance = 0.0025;
+
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
+                if (world[x][y].equals(Tileset.FLOOR)) {
+                    double roll = random.nextDouble();
+                    if (roll < appleChance) {
+                        world[x][y] = Tileset.FLOWER;
+                    } else if (roll < appleChance + goldChance) {
+                        world[x][y] = Tileset.GOLD;
                     }
                 }
             }
